@@ -104,8 +104,11 @@ class _HomePageState extends State<HomePage> {
             final post = posts[index];
 
             //return Post Tile UI
-            return MyPostTile(post: post, 
-            onUserTap: () => goUserPage(context, post.uid));
+            return MyPostTile(
+              post: post,
+              onUserTap: () => goUserPage(context, post.uid),
+              onPostTap: () => goPostPage(context, post),
+            );
           },
         );
   }

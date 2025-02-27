@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:twitter_clone/components/my_bio_box.dart';
 import 'package:twitter_clone/components/my_input_alert_box.dart';
 import 'package:twitter_clone/components/my_post_tile.dart';
+import 'package:twitter_clone/helper/navigate_pages.dart';
 import 'package:twitter_clone/models/user.dart';
 import 'package:twitter_clone/services/auth/auth_service.dart';
 import 'package:twitter_clone/services/database/database_provider.dart';
@@ -191,7 +192,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   final post = userAllPosts[index];
 
                   //post tile ui
-                  return MyPostTile(post: post, onUserTap: () {});
+                  return MyPostTile(
+                    post: post,
+                    onUserTap: () {},
+                    onPostTap: () => goPostPage(context, post),
+                  );
                 },
               ),
         ],
