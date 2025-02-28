@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:twitter_clone/models/post.dart';
 import 'package:twitter_clone/models/user.dart';
+import 'package:twitter_clone/services/auth/auth_service.dart';
 import 'package:twitter_clone/services/database/database_service.dart';
 
 class DatabaseProvider extends ChangeNotifier {
@@ -12,6 +13,7 @@ class DatabaseProvider extends ChangeNotifier {
 
   //get db & auth service
   final _db = DatabaseService();
+  final _auth = AuthService();
 
   /*
    USER PROFILE
@@ -50,6 +52,9 @@ class DatabaseProvider extends ChangeNotifier {
     //update local data
     _allPosts = allPosts;
 
+    //initial local like data
+    initializedLikeMap();
+
     //update UI
     notifyListeners();
   }
@@ -66,5 +71,85 @@ class DatabaseProvider extends ChangeNotifier {
 
     //reload data from firebase
     await loadAllPosts();
+  }
+
+  /*
+  Likes */
+
+  //local map to track like counts for each post
+  Map<String, int> _likeCounts = {
+    //for each post id: like count
+  };
+
+  //local list to track posts liked by current user
+  List<String> _likedPosts = [];
+
+  //does current user like this post?
+  bool isPostLikedByCurrentUser(String postId) => _likedPosts.contains(postId);
+
+  // get like count of a post
+  int getLikeCount(String postId) => _likeCounts[postId] ?? 0;
+
+  //initalize like map locally
+  void initializedLikeMap() {
+    //get current uid
+    final currentUserId = _auth.getCurrentUserid();
+
+    //clear liked posts(for when new user signs in, clear local data)
+    _likedPosts.clear();
+
+    //for each post get like data
+    for (var post in _allPosts) {
+      //update like count map
+      _likeCounts[post.id] = post.likeCount;
+
+      //if the current user already likes this post
+      if (post.likedBy.contains(currentUserId)) {
+        //add this post id to local list of liked posts
+        _likedPosts.add(post.id);
+      }
+    }
+  }
+
+  //toggle like
+  Future<void> toggleLike(String postId) async {
+    /*
+
+    This first part will update the local value first so that the UI feels immediate and responsive. We will update the UI optimisistically, Otherwise it takes some time(1-2 seconds, depending on the internet connection)
+
+     */
+
+    //store original values in case it fails
+    final likedPostsOriginal = _likedPosts;
+    final likeCountsOriginal = _likeCounts;
+
+    //perform like / unlike
+    if (_likedPosts.contains(postId)) {
+      _likedPosts.remove(postId);
+      _likeCounts[postId] = (_likeCounts[postId] ?? 0) - 1;
+    } else {
+      _likedPosts.add(postId);
+      _likeCounts[postId] = (_likeCounts[postId] ?? 0) + 1;
+    }
+
+    //update UI locally
+    notifyListeners();
+    /*
+    Now let's try to update itin our database
+     */
+
+    //attempt like in database
+    try {
+      await _db.toggleLikeInFirebase(postId);
+      notifyListeners();
+    }
+    // revert back to initial stste if update fails
+    catch (e) {
+      _likedPosts = likedPostsOriginal;
+      _likeCounts = likeCountsOriginal;
+
+      //update Ui again
+      notifyListeners();
+    }
   }
 }

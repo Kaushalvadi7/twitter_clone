@@ -160,8 +160,55 @@ class DatabaseService {
 
   /*
   LIKES
-
    */
+  //Like a post
+  Future<void> toggleLikeInFirebase(String postId) async {
+    try {
+      //get current uid
+      String uid = _auth.currentUser!.uid;
+
+      //go to doc for this post
+      DocumentReference postDoc = _db.collection("Posts").doc(postId);
+
+      //execute like
+      await _db.runTransaction((transaction) async {
+        //get post data
+        DocumentSnapshot postSnapshot = await transaction.get(postDoc);
+
+        //get list of users who like this post
+        List<String> likedBy = List<String>.from(postSnapshot['likesBy'] ?? []);
+
+        //get like count
+        int currentLikeCount = postSnapshot['likes'];
+
+        //if user has not liked this post yet -> then like
+        if (!likedBy.contains(uid)) {
+          //add user to like list
+          likedBy.add(uid);
+
+          //increment like count
+          currentLikeCount++;
+        }
+        //if user has already liked this post -> then unlike
+        else {
+          //remove user from like list
+          likedBy.remove(uid);
+
+          //decrement like count
+          currentLikeCount--;
+        }
+
+        //update in firebase
+        transaction.update(postDoc, {
+          'likes': currentLikeCount,
+          'likedBy': likedBy,
+          
+        });
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   /*
   COMMENTS

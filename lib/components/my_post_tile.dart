@@ -28,13 +28,25 @@ class _MyPostTileState extends State<MyPostTile> {
     listen: false,
   );
 
+  /*
+  LIKES
+   */
+  //user tapped like(or unlike)
+  void _toggleLikePost() async {
+    try {
+      await databaseProvider.toggleLike(widget.post.id);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   //show option for post
   void _showOptions() {
     //check if this post is owned bty hte user or not
     String currentUid = AuthService().getCurrentUserid();
     final bool isOwnPost = widget.post.uid == currentUid;
 
-    //show options
+    //show options for post
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -65,10 +77,8 @@ class _MyPostTileState extends State<MyPostTile> {
                   onTap: () {
                     //pop option box
                     Navigator.pop(context);
-                    
+
                     //handle report button
-
-
                   },
                 ),
 
@@ -81,8 +91,6 @@ class _MyPostTileState extends State<MyPostTile> {
                     Navigator.pop(context);
 
                     //handle block button
-
-
                   },
                 ),
               ],
@@ -92,7 +100,6 @@ class _MyPostTileState extends State<MyPostTile> {
                 leading: const Icon(Icons.cancel),
                 title: const Text("Cancel"),
                 onTap: () => Navigator.pop(context),
-,
               ),
             ],
           ),
@@ -103,6 +110,14 @@ class _MyPostTileState extends State<MyPostTile> {
 
   @override
   Widget build(BuildContext context) {
+    //does the current user like this post?
+    bool likedByCurrentUser = listeningProvider.isPostLikedByCurrentUser(
+      widget.post.id,
+    );
+
+    //listen to like count
+    int likeCount = listeningProvider.getLikeCount(widget.post.id);
+
     //container
     return GestureDetector(
       onTap: widget.onPostTap,
@@ -159,16 +174,6 @@ class _MyPostTileState extends State<MyPostTile> {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
-
-                  //message
-                  Text(
-                    widget.post.message,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                    ),
-                  ),
-
                   const Spacer(),
 
                   //button -> more option :delete
@@ -181,6 +186,45 @@ class _MyPostTileState extends State<MyPostTile> {
                   ),
                 ],
               ),
+            ),
+
+            const SizedBox(height: 20),
+
+            //message
+            Text(
+              widget.post.message,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.inversePrimary,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            //buttons -> like + comment
+            Row(
+              children: [
+                //like button
+                GestureDetector(
+                  onTap: _toggleLikePost,
+                  child:
+                      likedByCurrentUser
+                          ? Icon(Icons.favorite, color: Colors.red)
+                          : Icon(
+                            Icons.favorite_border,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                ),
+
+                const SizedBox(width: 5),
+
+                //like count
+                Text(
+                  likeCount != 0 ? likeCount.toString() : '',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
