@@ -175,11 +175,19 @@ class DatabaseService {
         //get post data
         DocumentSnapshot postSnapshot = await transaction.get(postDoc);
 
-        //get list of users who like this post
-        List<String> likedBy = List<String>.from(postSnapshot['likesBy'] ?? []);
+        if (!postSnapshot.exists) return;
 
-        //get like count
-        int currentLikeCount = postSnapshot['likes'];
+        Map<String, dynamic> postData =
+            postSnapshot.data() as Map<String, dynamic>;
+
+        List<dynamic> likedBy = postData["likedBy"] ?? [];
+        int currentLikeCount = postData["likeCount"] ?? 0;
+
+        // //get list of users who like this post
+        // List<String> likedBy = List<String>.from(postSnapshot['likesBy'] ?? []);
+
+        // //get like count
+        // int currentLikeCount = postSnapshot['likes'];
 
         //if user has not liked this post yet -> then like
         if (!likedBy.contains(uid)) {
@@ -195,18 +203,17 @@ class DatabaseService {
           likedBy.remove(uid);
 
           //decrement like count
-          currentLikeCount--;
+          currentLikeCount = (currentLikeCount > 0) ? currentLikeCount - 1 : 0;
         }
 
         //update in firebase
         transaction.update(postDoc, {
           'likes': currentLikeCount,
           'likedBy': likedBy,
-          
         });
       });
     } catch (e) {
-      print(e);
+      print("Error toggling like: $e");
     }
   }
 
