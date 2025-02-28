@@ -79,6 +79,7 @@ class _MyPostTileState extends State<MyPostTile> {
                     Navigator.pop(context);
 
                     //handle report button
+                    _reportPostConfirmationBox();
                   },
                 ),
 
@@ -91,6 +92,7 @@ class _MyPostTileState extends State<MyPostTile> {
                     Navigator.pop(context);
 
                     //handle block button
+                    _blockUserConfirmationBox();
                   },
                 ),
               ],
@@ -105,6 +107,106 @@ class _MyPostTileState extends State<MyPostTile> {
           ),
         );
       },
+    );
+  }
+
+  //report post confirmation
+  void _reportPostConfirmationBox() {
+    BuildContext rootContext =
+        context; // Save root context before opening dialog
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Row(
+              children: [
+                Icon(Icons.report, color: Colors.red),
+                SizedBox(width: 8),
+                Text(
+                  "Report Message",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            content: Text(
+              "Are you sure you want to report this message?",
+              style: TextStyle(fontSize: 16),
+            ),
+            actionsAlignment: MainAxisAlignment.spaceBetween,
+            actions: [
+              //cancel button
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Cancel"),
+              ),
+
+              //report button
+              TextButton(
+                onPressed: () async {
+                  //close box
+                  Navigator.pop(context);
+
+                  //report user
+                  await databaseProvider.reportUser(
+                    widget.post.id,
+                    widget.post.uid,
+                  );
+
+                  //let user know it was sucessfully reported
+                  ScaffoldMessenger.of(rootContext).showSnackBar(
+                    SnackBar(
+                      content: Text("Message reported Successfully!"),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                },
+                child: const Text("Report"),
+              ),
+            ],
+          ),
+    );
+  }
+
+  //Block user confirmation
+  void _blockUserConfirmationBox() {
+    BuildContext rootContext =
+        context; // Save root context before opening dialog
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text("Block User?"),
+            content: const Text("Are you sure you want to block this user?"),
+            actions: [
+              //cancel button
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Cancel"),
+              ),
+
+              //block button
+              TextButton(
+                onPressed: () async {
+                  //close box
+                  Navigator.pop(context);
+
+                  //report user
+                  await databaseProvider.blockUser(widget.post.uid);
+
+                  //let user know use was sucessfully block
+                  ScaffoldMessenger.of(rootContext).showSnackBar(
+                    const SnackBar(content: Text("User Blocked!")),
+                  );
+                },
+                child: const Text("Block"),
+              ),
+            ],
+          ),
     );
   }
 

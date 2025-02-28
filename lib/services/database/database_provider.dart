@@ -49,8 +49,12 @@ class DatabaseProvider extends ChangeNotifier {
     //get all posts from firbase
     final allPosts = await _db.getAllPostsFromFirebase();
 
-    //update local data
-    _allPosts = allPosts;
+    //get blocked user ids
+    final blockedUserIds = await _db.getBlockedUidsFromFirebase();
+
+    //filter out blocked user posts & update locally
+    _allPosts =
+        allPosts.where((post) => !blockedUserIds.contains(post.uid)).toList();
 
     //initial local like data
     initializedLikeMap();
@@ -151,5 +155,68 @@ class DatabaseProvider extends ChangeNotifier {
       //update Ui again
       notifyListeners();
     }
+  }
+
+  /*
+Account Stuff
+   */
+
+  //local list of blocked users
+  List<UserProfile> _blockedUser = [];
+
+  //get list of blocked users
+  List<UserProfile> get blockedUsers => _blockedUser;
+
+  //fetch blocked users
+  Future<void> loadBlockedUsers() async {
+    //get list of blocked user ids
+    final blockedUserIds = await _db.getBlockedUidsFromFirebase();
+
+    //get full user details using uid
+    final blockedUserData = await Future.wait(
+      blockedUserIds.map((id) => _db.getUserFromFirebase(id)),
+    );
+
+    //return as a list
+    _blockedUser = blockedUserData.whereType<UserProfile>().toList();
+
+    // update ui
+    notifyListeners();
+  }
+
+  //block user
+  Future<void> blockUser(String postUserId) async {
+    //perform block in firebase
+    await _db.blockUserInFirebase(postUserId);
+
+    //reload blocked users
+    await loadBlockedUsers();
+
+    //reload data
+    await loadAllPosts();
+
+    //update ui
+    notifyListeners();
+  }
+
+  //unblock user
+  Future<void> unblockUser(String blockedUserId) async {
+    //perform unblock in firebase
+    await _db.unblockUserInFirebase(blockedUserId);
+
+    //reload blocked users
+    await loadBlockedUsers();
+
+    //reload posts
+    await loadAllPosts();
+
+    //update ui
+    notifyListeners();
+  }
+
+  //Report user & post
+  Future<void> reportUser(String postId, postUserId) async {
+    //perform unblock in firebase
+    await _db.reportUserInFirebase(postId, postUserId);
   }
 }

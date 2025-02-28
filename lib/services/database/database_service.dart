@@ -226,6 +226,68 @@ class DatabaseService {
   ACCOUNTS STUFF
    */
 
+  //Report post
+  Future<void> reportUserInFirebase(String postId, postUserId) async {
+    //get current user id
+    final currentUserId = _auth.currentUser!.uid;
+
+    //create a report map
+    final report = {
+      'reportedBy': currentUserId,
+      'mesageId': postId,
+      'messageOwnerId': postUserId,
+      'timestamp': Timestamp.now(),
+    };
+
+    //update in firestore
+    await _db.collection('Reports').add(report);
+  }
+
+  //Block user
+  Future<void> blockUserInFirebase(String postUserId) async {
+    //get current user id
+    final currentUserId = _auth.currentUser!.uid;
+
+    //add this user to blocked list
+    await _db
+        .collection("Users")
+        .doc(currentUserId)
+        .collection("BlockedUsers")
+        .doc(postUserId)
+        .set({});
+  }
+
+  //UnBlock user
+  Future<void> unblockUserInFirebase(String postUserId) async {
+    //get current user id
+    final currentUserId = _auth.currentUser!.uid;
+
+    //unblock in firebase
+    await _db
+        .collection("Users")
+        .doc(currentUserId)
+        .collection("BlockedUsers")
+        .doc(postUserId)
+        .delete();
+  }
+
+  //get list of blocked user ids
+  Future<List<String>> getBlockedUidsFromFirebase() async {
+    //get current user id
+    final currentUserId = _auth.currentUser!.uid;
+
+    //get data of blocked users
+    final snapshot =
+        await _db
+            .collection('Users')
+            .doc(currentUserId)
+            .collection("BlockedUsers")
+            .get();
+
+    //return as a list of uids
+    return snapshot.docs.map((doc) => doc.id).toList();
+  }
+
   /*
   FOLLOW
    */
