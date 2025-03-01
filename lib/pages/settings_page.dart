@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone/components/my_settings_tile.dart';
+import 'package:twitter_clone/helper/navigate_pages.dart';
 import 'package:twitter_clone/themes/theme_provider.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
+
+  get goToBlockedUserPage => null;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +44,16 @@ class SettingsPage extends StatelessWidget {
           ),
 
           //block users tile
+          MySettingsTile(
+            title: "Blocked Users",
+            action: GestureDetector(
+              onTap: () => goBlockedUsersPage(context),
+              child: Icon(
+                Icons.arrow_forward,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
 
           //Accounts settings tile
         ],

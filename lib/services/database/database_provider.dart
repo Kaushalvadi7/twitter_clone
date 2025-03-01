@@ -145,7 +145,7 @@ class DatabaseProvider extends ChangeNotifier {
     //attempt like in database
     try {
       await _db.toggleLikeInFirebase(postId);
-      await loadAllPosts();
+      // await loadAllPosts();
     }
     // revert back to initial stste if update fails
     catch (e) {

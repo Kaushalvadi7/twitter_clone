@@ -181,7 +181,7 @@ class DatabaseService {
             postSnapshot.data() as Map<String, dynamic>;
 
         List<dynamic> likedBy = postData["likedBy"] ?? [];
-        int currentLikeCount = postData["likeCount"] ?? 0;
+        int currentLikeCount = postData["likes"] ?? 0;
 
         // //get list of users who like this post
         // List<String> likedBy = List<String>.from(postSnapshot['likesBy'] ?? []);
