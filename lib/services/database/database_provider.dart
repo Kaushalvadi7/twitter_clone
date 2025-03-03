@@ -46,7 +46,7 @@ class DatabaseProvider extends ChangeNotifier {
 
   //fetch all posts
   Future<void> loadAllPosts() async {
-    //get all posts from firbase
+    //get all posts from firebase
     final allPosts = await _db.getAllPostsFromFirebase();
 
     //get blocked user ids
@@ -147,7 +147,7 @@ class DatabaseProvider extends ChangeNotifier {
       await _db.toggleLikeInFirebase(postId);
       // await loadAllPosts();
     }
-    // revert back to initial stste if update fails
+    // revert back to initial state if update fails
     catch (e) {
       _likedPosts = likedPostsOriginal;
       _likeCounts = likeCountsOriginal;

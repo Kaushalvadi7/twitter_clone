@@ -105,6 +105,20 @@ class DatabaseService {
       batch.delete(post.reference);
     }
 
+    //delete likes done by this user
+    QuerySnapshot allPosts = await _db.collection("Posts").get();
+    for (QueryDocumentSnapshot post in allPosts.docs) {
+      Map<String, dynamic> postData = post.data() as Map<String, dynamic>;
+      var likedBy = postData['likedBy'] as List<dynamic> ?? [];
+
+      if (likedBy.contains(uid)) {
+        batch.update(post.reference, {
+          'likedBy': FieldValue.arrayRemove([uid]),
+          'likes': FieldValue.increment(-1),
+        });
+      }
+    }
+
     //commit batch
     await batch.commit();
   }

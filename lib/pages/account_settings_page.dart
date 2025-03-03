@@ -6,6 +6,7 @@ this page contains various settings for the user account.
  */
 
 import 'package:flutter/material.dart';
+import 'package:twitter_clone/services/auth/auth_gate.dart';
 import 'package:twitter_clone/services/auth/auth_service.dart';
 
 class AccountSettingsPage extends StatefulWidget {
@@ -52,6 +53,12 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                 onPressed: () async {
                   //close box
                   Navigator.pop(context);
+
+                  //then navigate to the authgate
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AuthGate()),
+                  );
 
                   //delete account user
                   await AuthService().deleteAccount();
