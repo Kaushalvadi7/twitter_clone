@@ -89,6 +89,25 @@ class DatabaseService {
     }
   }
 
+  //Delete user info
+  Future<void> deleteUserInfoFromFirebase(String uid) async {
+    WriteBatch batch = _db.batch();
+
+    //delete user doc
+    DocumentReference userDoc = _db.collection("Users").doc(uid);
+    batch.delete(userDoc);
+
+    //delete user posts
+    QuerySnapshot userPosts =
+        await _db.collection("Posts").where('uid', isEqualTo: uid).get();
+
+    for (var post in userPosts.docs) {
+      batch.delete(post.reference);
+    }
+
+    //commit batch
+    await batch.commit();
+  }
   /*
   POST MESSAGE
 
