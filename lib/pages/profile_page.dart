@@ -154,13 +154,17 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
-                GestureDetector(
-                  onTap: _showEditBioBox,
-                  child: Icon(
-                    Icons.edit,
-                    color: Theme.of(context).colorScheme.primary,
+
+                //button to edit bio
+                //only show if this is the current user
+                if (user != null && user!.uid == currentUserId)
+                  GestureDetector(
+                    onTap: _showEditBioBox,
+                    child: Icon(
+                      Icons.edit,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
-                ),
               ],
             ),
           ),
