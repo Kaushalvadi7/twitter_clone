@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:twitter_clone/components/my_input_alert_box.dart';
 import 'package:twitter_clone/models/post.dart';
 import 'package:twitter_clone/services/auth/auth_service.dart';
 import 'package:twitter_clone/services/database/database_provider.dart';
@@ -28,9 +29,19 @@ class _MyPostTileState extends State<MyPostTile> {
     listen: false,
   );
 
+  //on startup
+  @override
+  void initState(){
+    super.initState();
+
+    ///load comments for this post
+    _loadComments();
+  }
+
   /*
   LIKES
    */
+
   //user tapped like(or unlike)
   void _toggleLikePost() async {
     try {
@@ -38,6 +49,45 @@ class _MyPostTileState extends State<MyPostTile> {
     } catch (e) {
       print(e);
     }
+  }
+  /*
+  Comments
+   */
+  //comment text controller
+  final _commentController =TextEditingController();
+
+  //open comment box -> user want to type new comment
+  void _openNewCommentBox() {
+    showDialog(context: context,
+        builder: (context)=> MyInputAlertBox(
+            textController:_commentController,
+            hintText: "Type a comment ..",
+        onPressed: () async{
+              // add post in db
+          await _addComment();
+        },
+        onPressedText: "Post",
+        )
+    );
+  }
+
+  //user tapped post to add comment
+  Future<void> _addComment() async{
+    //does nothing if theres nothing in the textfeild
+    if(_commentController.text.trim().isEmpty) return;
+
+    //attempt to post comment
+    try{
+      await databaseProvider.addComment(
+        widget.post.id, _commentController.text.trim() );
+    } catch(e){
+      print(e);
+    }
+  }
+
+  //load comments
+  Future<void> _loadComments() async{
+    await databaseProvider.loadComments(widget.post.id);
   }
 
   //show option for post
@@ -156,7 +206,7 @@ class _MyPostTileState extends State<MyPostTile> {
                     widget.post.uid,
                   );
 
-                  //let user know it was sucessfully reported
+                  //let user know it was successfully reported
                   ScaffoldMessenger.of(rootContext).showSnackBar(
                     SnackBar(
                       content: Text("Message reported Successfully!"),
@@ -198,7 +248,7 @@ class _MyPostTileState extends State<MyPostTile> {
                   //report user
                   await databaseProvider.blockUser(widget.post.uid);
 
-                  //let user know use was sucessfully block
+                  //let user know use was successfully block
                   ScaffoldMessenger.of(rootContext).showSnackBar(
                     const SnackBar(content: Text("User Blocked!")),
                   );
@@ -219,6 +269,10 @@ class _MyPostTileState extends State<MyPostTile> {
 
     //listen to like count
     int likeCount = listeningProvider.getLikeCount(widget.post.id);
+
+    //listen to comment count
+    int commentCount = listeningProvider.getComments(widget.post.id).length;
+
 
     //container
     return GestureDetector(
@@ -305,27 +359,63 @@ class _MyPostTileState extends State<MyPostTile> {
             //buttons -> like + comment
             Row(
               children: [
-                //like button
-                GestureDetector(
-                  onTap: _toggleLikePost,
-                  child:
-                      likedByCurrentUser
-                          ? Icon(Icons.favorite, color: Colors.red)
-                          : Icon(
-                            Icons.favorite_border,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                ),
 
-                const SizedBox(width: 5),
+                //LIKE SECTION
+                SizedBox(
+                  width: 50,
+                  child: Row(
+                    children: [
+                      //like button
+                      GestureDetector(
+                        onTap: _toggleLikePost,
+                        child:
+                        likedByCurrentUser
+                            ? Icon(Icons.favorite, color: Colors.red)
+                            : Icon(
+                          Icons.favorite_border,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
 
-                //like count
-                Text(
-                  likeCount != 0 ? likeCount.toString() : '',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
+                      const SizedBox(width: 5),
+
+                      //like count
+                      Text(
+                        likeCount != 0 ? likeCount.toString() : '',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+
+                //COMMENTS SECTION
+                Row(
+                  children: [
+
+                    //comments button
+                    GestureDetector(
+                      onTap: _openNewCommentBox ,
+                      child: Icon(Icons.comment,color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+
+                    const SizedBox(width: 5),
+
+                    //comment count
+                    Text(
+                    commentCount != 0 ? commentCount.toString() : '',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    )
+
+
+
+                  ],
+                )
+
               ],
             ),
           ],
