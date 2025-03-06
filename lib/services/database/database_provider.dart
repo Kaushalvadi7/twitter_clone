@@ -186,7 +186,7 @@ class DatabaseProvider extends ChangeNotifier {
   }
 
   //add a comment
-  Future<void> addComment(String postId, message) async{
+  Future<void> addComment(String postId, message) async {
     //add comments in firebase
     await _db.addCommentInFirebase(postId, message);
 
@@ -201,7 +201,6 @@ class DatabaseProvider extends ChangeNotifier {
 
     //reload comments
     await loadComments(postId);
-
   }
 
   /*
@@ -266,4 +265,134 @@ Account Stuff
     //perform unblock in firebase
     await _db.reportUserInFirebase(postId, postUserId);
   }
+
+
+/*
+Follow
+
+Everything here is done with uids (String)
+-----------------------------------------------------------------------------------
+
+Each user id has a list of:
+  - followers uid
+  -following uid
+
+  E.g.
+  {
+  'uid1' : [ list of uids that are followers / following],
+  'uid2' : [ list of uids that are followers / following],
+  'uid3' : [ list of uids that are followers / following],
+  'uid4' : [ list of uids that are followers / following],
+
+  }
+ */
+
+//local map
+  final Map<String, List<String>> _followers = {};
+  final Map<String, List<String>> _following = {};
+  final Map<String, int> _followerCount = {};
+  final Map<String, int> _followingCount = {};
+
+//get counts for followers & following locally: given a uid
+  int getFollowerCount(String uid) => _followerCount[uid] ?? 0;
+
+  int getFollowingCount(String uid) => _followingCount[uid] ?? 0;
+
+  //load followers
+  Future<void> loadUserFollowers(String uid) async {
+    //get the list of follower uids from firebase
+    final listOfFollowerUids = await _db.getFollowerUidsFromFirebase(uid);
+
+    //update local data
+    _followers[uid] = listOfFollowerUids;
+    _followerCount[uid] = listOfFollowerUids.length;
+
+    //update ui
+    notifyListeners();
+  }
+
+  //load following
+  Future<void> loadUserFollowing(String uid) async {
+    //get the list of following uids from firebase
+    final listOfFollowingUids = await _db.getFollowingUidsFromFirebase(uid);
+
+    //update local data
+    _following[uid] = listOfFollowingUids;
+    _followingCount[uid] = listOfFollowingUids.length;
+
+    //update ui
+    notifyListeners();
+  }
+
+  //follow user
+  Future<void> followUser(String targetUserId) async {
+    /*
+    currently logged in user want to follow target user
+     */
+  //get current uid
+    final currentUserId = _auth.getCurrentUserid();
+
+  // initialize with empty lists if null
+    _following.putIfAbsent(currentUserId, ()=> []);
+    _followers.putIfAbsent(targetUserId, ()=> []);
+
+    /*
+  Optimistic Ui changes: Update the local data & revert back if database request fails
+
+   */
+
+    //follow if current user is not one of the target user's followers
+    if(!_followers[targetUserId]!.contains(currentUserId)){
+      //add current user to target user's follower list
+      _followers[targetUserId]?.add(currentUserId);
+
+      //update follower count
+      _followerCount[targetUserId]= (_followerCount[targetUserId] ?? 0 ) + 1;
+
+      //then add target user to current user following
+      _following[currentUserId]?.add(targetUserId);
+
+      //update following count
+      _followingCount[currentUserId] = (_followingCount[currentUserId] ?? 0) + 1;
+
+    }
+    //update UI
+
+    notifyListeners();
+
+    /*
+    Ui has been optimistically update above with local data.
+    Now let's try to make this request to our database.
+     */
+    try{
+      //follow user in firebase
+      await _db.followUserInFirebase(targetUserId);
+
+      //reload current user's followers
+      await loadUserFollowers(currentUserId);
+
+      //reload current user's following
+      await loadUserFollowing(currentUserId);
+
+    }catch(e){
+      //remove current user from target user's followers
+      _followers[targetUserId]?.remove(currentUserId);
+
+      //update follower count
+      _followerCount[targetUserId] = (_followerCount[targetUserId] ?? 0) - 1;
+
+      //remove from current user's following
+      _following[currentUserId]?.remove(targetUserId);
+
+      //update following count
+      _followingCount[currentUserId] =(_followingCount[currentUserId] ?? 0 ) - 1;
+
+      //update Ui
+      notifyListeners();
+    }
 }
+
+  //unfollow user
+  //is current user following target user?
+}
+
