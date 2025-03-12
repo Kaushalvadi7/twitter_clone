@@ -32,9 +32,11 @@ class DatabaseProvider extends ChangeNotifier {
 
   //local list of posts
   List<Post> _allPosts = [];
+  List<Post> _followingPosts = [];
 
   //get posts
   List<Post> get allPosts => _allPosts;
+  List<Post> get followingPosts => _followingPosts;
 
   //post message
   Future<void> postMessage(String message) async {
@@ -57,6 +59,9 @@ class DatabaseProvider extends ChangeNotifier {
     _allPosts =
         allPosts.where((post) => !blockedUserIds.contains(post.uid)).toList();
 
+    //filter out the following posts
+    await loadFollowingPosts();
+
     //initial local like data
     initializedLikeMap();
 
@@ -67,6 +72,25 @@ class DatabaseProvider extends ChangeNotifier {
   //filter and return posts given uid
   List<Post> filterUserPosts(String uid) {
     return _allPosts.where((post) => post.uid == uid).toList();
+  }
+
+  //load following posts -> posts from users that the current user follows
+  Future<void> loadFollowingPosts() async {
+    //get current user id
+    String currentUserid = _auth.getCurrentUserid();
+
+    //get list of uids that the current logged in user follows (from firebase)
+    final followingUserIds = await _db.getFollowingUidsFromFirebase(
+      currentUserid,
+    );
+
+    //filter all posts to be the onces for the following tab
+
+    _followingPosts =
+        _allPosts.where((post) => followingUserIds.contains(post.uid)).toList();
+
+    //update UI
+    notifyListeners();
   }
 
   // delete post
@@ -455,12 +479,127 @@ Each user id has a list of:
   }
 
   //check if current user is following target user
-  bool isFollowing(String targetUserId) {
+  bool isFollowing(String uid) {
     //get current uid
     final currentUserId = _auth.getCurrentUserid();
 
     //if current user is in target user's followers list
-    return _followers[targetUserId]?.contains(currentUserId) ?? false;
+    return _followers[uid]?.contains(currentUserId) ?? false;
   }
 
+  /*
+  Map of profiles
+
+  for a given uid:
+
+  -list of follower profiles
+  -list of following profiles
+
+   */
+
+  final Map<String, List<UserProfile>> _followersProfiles = {};
+  final Map<String, List<UserProfile>> _followingProfiles = {};
+
+  //get list of follower profiles for a given user
+  List<UserProfile> getListOfFollowersProfiles(String uid) =>
+      _followersProfiles[uid] ?? [];
+
+  //get list of following profiles for a given user
+  List<UserProfile> getListOfFollowingProfiles(String uid) =>
+      _followingProfiles[uid] ?? [];
+
+  //load follower profiles for a given user
+  Future<void> loadUserFollowerProfiles(String uid) async {
+    try {
+      //get list of follower uids from firebase
+      final followerIds = await _db.getFollowerUidsFromFirebase(uid);
+
+      //create list of user profiles
+      List<UserProfile> followerProfiles = [];
+
+      //go through each follower id
+      for (String followerId in followerIds) {
+        //get user profile from firebase with this uid
+        UserProfile? followerProfile = await _db.getUserFromFirebase(
+          followerId,
+        );
+
+        //add to follower profiles list
+        if (followerProfile != null) {
+          followerProfiles.add(followerProfile);
+        }
+      }
+      // update local data
+      _followersProfiles[uid] = followerProfiles;
+
+      //update UI
+      notifyListeners();
+    }
+    // if there are errors..
+    catch (e) {
+      print(e);
+    }
+  }
+
+  //load following profiles for a given user
+  Future<void> loadUserFollowingProfiles(String uid) async {
+    try {
+      //get list of following uids from firebase
+      final followingIds = await _db.getFollowingUidsFromFirebase(uid);
+
+      //create list of user profiles
+      List<UserProfile> followingProfiles = [];
+
+      //go through each following id
+      for (String followingId in followingIds) {
+        //get user profile from firebase with this uid
+        UserProfile? followingProfile = await _db.getUserFromFirebase(
+          followingId,
+        );
+
+        //add to following profiles list
+        if (followingProfile != null) {
+          followingProfiles.add(followingProfile);
+        }
+      }
+
+      //update local data
+      _followingProfiles[uid] = followingProfiles;
+
+      //update ui
+      notifyListeners();
+    }
+    //if there is an error
+    catch (e) {
+      print(e);
+    }
+  }
+
+  /*
+  SEARCH USERS
+ */
+
+  // list of search results
+  List<UserProfile> _searchResults = [];
+
+  //get list of search results
+  List<UserProfile> get searchResults => _searchResults;
+
+  //method to search for a user
+  Future<void> searchUsers(String searchTerm) async {
+    try {
+      //search users in firebase
+      final results = await _db.searchUsersInFirebase(searchTerm);
+
+      //update local data
+      _searchResults = results;
+
+      //update ui
+      notifyListeners();
+    }
+    //errors.
+    catch (e) {
+      print(e);
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone/components/my_input_alert_box.dart';
+import 'package:twitter_clone/helper/time_formatter.dart';
 import 'package:twitter_clone/models/post.dart';
 import 'package:twitter_clone/services/auth/auth_service.dart';
 import 'package:twitter_clone/services/database/database_provider.dart';
@@ -31,7 +32,7 @@ class _MyPostTileState extends State<MyPostTile> {
 
   //on startup
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
     ///load comments for this post
@@ -50,43 +51,48 @@ class _MyPostTileState extends State<MyPostTile> {
       print(e);
     }
   }
+
   /*
   Comments
    */
   //comment text controller
-  final _commentController =TextEditingController();
+  final _commentController = TextEditingController();
 
   //open comment box -> user want to type new comment
   void _openNewCommentBox() {
-    showDialog(context: context,
-        builder: (context)=> MyInputAlertBox(
-            textController:_commentController,
+    showDialog(
+      context: context,
+      builder:
+          (context) => MyInputAlertBox(
+            textController: _commentController,
             hintText: "Type a comment ..",
-        onPressed: () async{
+            onPressed: () async {
               // add post in db
-          await _addComment();
-        },
-        onPressedText: "Post",
-        )
+              await _addComment();
+            },
+            onPressedText: "Post",
+          ),
     );
   }
 
   //user tapped post to add comment
-  Future<void> _addComment() async{
+  Future<void> _addComment() async {
     //does nothing if theres nothing in the textfeild
-    if(_commentController.text.trim().isEmpty) return;
+    if (_commentController.text.trim().isEmpty) return;
 
     //attempt to post comment
-    try{
+    try {
       await databaseProvider.addComment(
-        widget.post.id, _commentController.text.trim() );
-    } catch(e){
+        widget.post.id,
+        _commentController.text.trim(),
+      );
+    } catch (e) {
       print(e);
     }
   }
 
   //load comments
-  Future<void> _loadComments() async{
+  Future<void> _loadComments() async {
     await databaseProvider.loadComments(widget.post.id);
   }
 
@@ -273,7 +279,6 @@ class _MyPostTileState extends State<MyPostTile> {
     //listen to comment count
     int commentCount = listeningProvider.getComments(widget.post.id).length;
 
-
     //container
     return GestureDetector(
       onTap: widget.onPostTap,
@@ -359,7 +364,6 @@ class _MyPostTileState extends State<MyPostTile> {
             //buttons -> like + comment
             Row(
               children: [
-
                 //LIKE SECTION
                 SizedBox(
                   width: 50,
@@ -369,12 +373,12 @@ class _MyPostTileState extends State<MyPostTile> {
                       GestureDetector(
                         onTap: _toggleLikePost,
                         child:
-                        likedByCurrentUser
-                            ? Icon(Icons.favorite, color: Colors.red)
-                            : Icon(
-                          Icons.favorite_border,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                            likedByCurrentUser
+                                ? Icon(Icons.favorite, color: Colors.red)
+                                : Icon(
+                                  Icons.favorite_border,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
                       ),
 
                       const SizedBox(width: 5),
@@ -393,11 +397,12 @@ class _MyPostTileState extends State<MyPostTile> {
                 //COMMENTS SECTION
                 Row(
                   children: [
-
                     //comments button
                     GestureDetector(
-                      onTap: _openNewCommentBox ,
-                      child: Icon(Icons.comment,color: Theme.of(context).colorScheme.primary,
+                      onTap: _openNewCommentBox,
+                      child: Icon(
+                        Icons.comment,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
 
@@ -405,17 +410,22 @@ class _MyPostTileState extends State<MyPostTile> {
 
                     //comment count
                     Text(
-                    commentCount != 0 ? commentCount.toString() : '',
+                      commentCount != 0 ? commentCount.toString() : '',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
                       ),
-                    )
-
-
-
+                    ),
                   ],
-                )
+                ),
 
+                const Spacer(),
+                //timestamp
+                Text(
+                  getTimeAgo(widget.post.timestamp),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
               ],
             ),
           ],

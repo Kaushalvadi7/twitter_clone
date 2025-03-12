@@ -64,29 +64,55 @@ class _HomePageState extends State<HomePage> {
   //BUILD UI
   @override
   Widget build(BuildContext context) {
-    //Scaffold
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      drawer: MyDrawer(),
+    //Tab controller: 2 tabs -> for you /following
+    return DefaultTabController(
+      length: 2,
 
-      //APP BAR
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          "H O M E",
-          style: TextStyle(fontWeight: FontWeight.bold),
+      //Scaffold
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        drawer: MyDrawer(),
+
+        //APP BAR
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            "H O M E",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          foregroundColor: Theme.of(context).colorScheme.primary,
+          bottom: TabBar(
+            dividerColor: Colors.transparent,
+            labelColor: Theme.of(context).colorScheme.inversePrimary,
+            unselectedLabelColor: Theme.of(context).colorScheme.primary,
+            indicatorColor: Theme.of(context).colorScheme.secondary,
+            tabs: const [
+              //Followers
+              Tab(text: 'For you'),
+
+              //Following
+              Tab(text: 'Following'),
+            ],
+          ),
         ),
-        foregroundColor: Theme.of(context).colorScheme.primary,
-      ),
 
-      //Floating Action Button
-      floatingActionButton: FloatingActionButton(
-        onPressed: _openPostMessageBox,
-        child: const Icon(Icons.add),
-      ),
+        //Floating Action Button
+        floatingActionButton: FloatingActionButton(
+          onPressed: _openPostMessageBox,
+          child: const Icon(Icons.add),
+        ),
 
-      //body list of all posts
-      body: _buildPostList(listeningProvider.allPosts),
+        //body list of all posts
+        body: TabBarView(
+          children: [
+            //for you
+            _buildPostList(listeningProvider.allPosts),
+
+            //following
+            _buildPostList(listeningProvider.followingPosts),
+          ],
+        ),
+      ),
     );
   }
 

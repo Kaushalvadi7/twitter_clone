@@ -29,9 +29,9 @@ class MyProfileStats extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         //posts
-        GestureDetector(
-          onTap: () {},
-          child: Expanded(
+        Expanded(
+          child: GestureDetector(
+            onTap: () {},
             child: Column(
               children: [
                 Text(
@@ -54,9 +54,9 @@ class MyProfileStats extends StatelessWidget {
         ),
 
         //followers
-        GestureDetector(
-          onTap: onTap,
-          child: Expanded(
+        Expanded(
+          child: GestureDetector(
+            onTap: onTap,
             child: Column(
               children: [
                 Text(
@@ -79,9 +79,9 @@ class MyProfileStats extends StatelessWidget {
         ),
 
         //following
-        GestureDetector(
-          onTap: onTap,
-          child: Expanded(
+        Expanded(
+          child: GestureDetector(
+            onTap: onTap,
             child: Column(
               children: [
                 Text(

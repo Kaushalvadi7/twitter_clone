@@ -59,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
     await databaseProvider.loadUserFollowers(widget.uid);
     await databaseProvider.loadUserFollowing(widget.uid);
 
-    //updaate following state
+    //update following state
     _isFollowing = databaseProvider.isFollowing(widget.uid);
 
     //finished loading..
@@ -168,6 +168,10 @@ class _ProfilePageState extends State<ProfilePage> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         foregroundColor: Theme.of(context).colorScheme.primary,
+        leading: IconButton(
+          onPressed: () => goHomePage(context),
+          icon: const Icon(Icons.arrow_back),
+        ),
       ),
 
       //body
@@ -202,20 +206,25 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(height: 25),
 
           //profile stats -> number of posts / follower /following
-          
+          MyProfileStats(
+            postCount: userAllPosts.length.toString(),
+            followersCount: followersCount, //user!.followers.length,
+            followingCount: followingCount, //user!.following.length,
+            onTap:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FollowListPage(uid: widget.uid),
+                  ),
+                ),
+          ),
+
+          const SizedBox(height: 25),
+
           //follow /unfollow button
           //only show if the user is viewing someone else's profile
           if (user != null && user!.uid != currentUserId)
-            MyFollowButton(
-              onPressed: togglefollow,
-              /*() async {
-                //toggle follow
-                await databaseProvider.toggleFollow(user!.uid);
-              },
-              */
-              isFollowing: _isFollowing,
-              //user!.followers.contains(currentUserId),
-            ),
+            MyFollowButton(onPressed: togglefollow, isFollowing: _isFollowing),
 
           //edit bio
           Padding(

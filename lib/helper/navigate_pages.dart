@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:twitter_clone/models/post.dart';
 import 'package:twitter_clone/pages/account_settings_page.dart';
 import 'package:twitter_clone/pages/blocked_users_page.dart';
+import 'package:twitter_clone/pages/home_page.dart';
 import 'package:twitter_clone/pages/post_page.dart';
 import 'package:twitter_clone/pages/profile_page.dart';
 
@@ -38,5 +39,17 @@ void goAccountSettingsPage(BuildContext context) {
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => AccountSettingsPage()),
+  );
+}
+
+//go to home page (but remove all prevous routes, this is good for reload)
+void goHomePage(BuildContext context) {
+  //navigate to the home page
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(builder: (context) => HomePage()),
+
+    //keep th first route (auth gate)
+    (route) => route.isFirst,
   );
 }
