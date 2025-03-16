@@ -23,9 +23,9 @@ class MyInputAlertBox extends StatelessWidget {
       ),
 
       //color
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: Theme.of(context).colorScheme.tertiary,
 
-      //Textfielf(user types here)
+      //Text field(user types here)
       content: TextField(
         controller: textController,
 
@@ -34,7 +34,7 @@ class MyInputAlertBox extends StatelessWidget {
         maxLines: 3,
 
         decoration: InputDecoration(
-          //border when textfield is unselected
+          //border when text field is unselected
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.secondary,
@@ -42,7 +42,7 @@ class MyInputAlertBox extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
 
-          //border when textfeild is selected
+          //border when text field is selected
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.primary,
@@ -54,7 +54,7 @@ class MyInputAlertBox extends StatelessWidget {
           hintText: hintText,
           hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
 
-          //Color inside of textfeild
+          //Color inside of text field
           fillColor: Theme.of(context).colorScheme.secondary,
           filled: true,
 

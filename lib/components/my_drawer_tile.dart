@@ -18,10 +18,10 @@ class MyDrawerTile extends StatelessWidget {
     return ListTile(
       title: Text(
         title,
-        style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
+        style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary,fontWeight: FontWeight.bold,fontSize: 18),
       ),
 
-      leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
+      leading: Icon(icon, color: Theme.of(context).colorScheme.inversePrimary,size: 30,),
       onTap: onTap,
     );
   }

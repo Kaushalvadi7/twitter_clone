@@ -42,7 +42,7 @@ class _RegisterPageState extends State<RegisterPage> {
         //finished loading
         if (mounted) hideLoadingCircle(context);
 
-        //once registerd, create and save user profile in database
+        //once registered, create and save user profile in database
         await _db.saveUserInfoInFirebase(
           name: nameController.text,
           email: emailController.text,
@@ -84,100 +84,102 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 50),
-
-                //twitter logo
-                Image.asset(
-                  'assets/images/twitter_logo.jpg',
-                  height: 150,
-                  width: 200,
-                ),
-
-                const SizedBox(height: 40),
-                //create an account message
-                Center(
-                  child: Text(
-                    "Let's create an account for you",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.w500,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 25),
+              
+                  //twitter logo
+                  Image.asset(
+                    'assets/images/twitter_logo.jpg',
+                    height: 150,
+                    width: 200,
+                  ),
+              
+                  const SizedBox(height: 15),
+                  //create an account message
+                  Center(
+                    child: Text(
+                      "Let's create an account for you",
+                      style: TextStyle(
+                        fontSize: 19,
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
-                ),
-
-                const SizedBox(height: 25),
-
-                //name Textfield
-                MyTextField(
-                  controller: nameController,
-                  hintText: "Enter Your Name ..",
-                  obscureText: false,
-                ),
-
-                const SizedBox(height: 10),
-
-                //email Textfield
-                MyTextField(
-                  controller: emailController,
-                  hintText: "Enter Email Address ..",
-                  obscureText: false,
-                ),
-
-                const SizedBox(height: 10),
-
-                //password field
-                MyTextField(
-                  controller: pwController,
-                  hintText: "Enter Password ..",
-                  obscureText: true,
-                ),
-
-                const SizedBox(height: 10),
-
-                //confirm password field
-                MyTextField(
-                  controller: confirmPwController,
-                  hintText: "Confirm Password ..",
-                  obscureText: true,
-                ),
-
-                const SizedBox(height: 25),
-
-                //sign up button
-                MyButton(text: "Register", onTap: register),
-
-                const SizedBox(height: 50),
-
-                //Already a member? Login Here
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Already a member?",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-
-                    //login here
-                    GestureDetector(
-                      onTap: widget.onTap,
-                      child: Text(
-                        "Login Here",
+              
+                  const SizedBox(height: 25),
+              
+                  //name Text field
+                  MyTextField(
+                    controller: nameController,
+                    hintText: "Enter Your Name ..",
+                    obscureText: false,
+                  ),
+              
+                  const SizedBox(height: 12),
+              
+                  //email Text field
+                  MyTextField(
+                    controller: emailController,
+                    hintText: "Enter Email Address ..",
+                    obscureText: false,
+                  ),
+              
+                  const SizedBox(height: 12),
+              
+                  //password field
+                  MyTextField(
+                    controller: pwController,
+                    hintText: "Enter Password ..",
+                    obscureText: true,
+                  ),
+              
+                  const SizedBox(height: 12),
+              
+                  //confirm password field
+                  MyTextField(
+                    controller: confirmPwController,
+                    hintText: "Confirm Password ..",
+                    obscureText: true,
+                  ),
+              
+                  const SizedBox(height: 25),
+              
+                  //sign up button
+                  MyButton(text: "Register", onTap: register),
+              
+                  const SizedBox(height: 30),
+              
+                  //Already a member? Login Here
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Already a member?",
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.primary,fontSize: 16
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 5),
+              
+                      //login here
+                      GestureDetector(
+                        onTap: widget.onTap,
+                        child: Text(
+                          "Login Here",
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                            fontWeight: FontWeight.w700,fontSize: 17,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

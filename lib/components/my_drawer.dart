@@ -3,6 +3,7 @@ import 'package:twitter_clone/components/my_drawer_tile.dart';
 import 'package:twitter_clone/pages/profile_page.dart';
 import 'package:twitter_clone/pages/search_page.dart';
 import 'package:twitter_clone/pages/settings_page.dart';
+import 'package:twitter_clone/services/auth/auth_gate.dart';
 import 'package:twitter_clone/services/auth/auth_service.dart';
 /*
 Drawer
@@ -19,8 +20,14 @@ class MyDrawer extends StatelessWidget {
   final _auth = AuthService();
 
   //logout function
-  void logout() {
+  void logout(BuildContext context) {
     _auth.logOut();
+
+    // Navigate to the Login Screen and remove previous screens from history
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AuthGate()),
+    );
   }
 
   @override
@@ -33,14 +40,18 @@ class MyDrawer extends StatelessWidget {
           child: Column(
             children: [
               //app logo
+              //twitter logo
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 50.0),
-                child: Icon(
-                  Icons.person,
-                  size: 72,
-                  color: Theme.of(context).colorScheme.primary,
+                padding: const EdgeInsets.only(top: 40),
+                child: Image.asset(
+                  'assets/images/twitter_logo.jpg',
+                  height: 100,
+                  width: 150,
                 ),
               ),
+
+              const SizedBox(height: 10),
+
 
               //divider line
               Divider(color: Theme.of(context).colorScheme.secondary),
@@ -110,7 +121,7 @@ class MyDrawer extends StatelessWidget {
               MyDrawerTile(
                 title: "L O G O U T",
                 icon: Icons.logout,
-                onTap: logout,
+                onTap: () => logout(context),
               ),
               const SizedBox(height: 10),
             ],

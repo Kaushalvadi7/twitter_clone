@@ -64,7 +64,7 @@ class DatabaseService {
   //Get user info
   Future<UserProfile?> getUserFromFirebase(String uid) async {
     try {
-      //retrive user doc from firebase
+      //Retrive user doc from firebase
       DocumentSnapshot userDoc = await _db.collection("Users").doc(uid).get();
 
       //convert doc to userprofile

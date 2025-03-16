@@ -5,39 +5,6 @@ class AuthService {
   //get instance of firebase auth
   final _auth = FirebaseAuth.instance;
 
-  // Google Sign-In instance
-  // final GoogleSignIn _googleSignIn = GoogleSignIn();
-
-  // 🔹 Sign in with Google
-  // Future<UserCredential?> loginWithGoogle() async {
-  //   try {
-  //     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-  //     if (googleUser == null) return null; // User canceled sign-in
-
-  //     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-  //     final AuthCredential credential = GoogleAuthProvider.credential(
-  //       idToken: googleAuth.idToken,
-  //       accessToken: googleAuth.accessToken,
-  //     );
-
-  //     return await _firebaseAuth.signInWithCredential(credential);
-  //   } catch (e) {
-  //     // print('Error during Google login: $e');
-  //     return null;
-  //   }
-  // }
-
-  // // 🔹 Sign out from Google
-  // Future<void> signOutGoogle() async {
-  //   try {
-  //     await _googleSignIn.signOut();
-  //     await _firebaseAuth.signOut();
-  //   } catch (e) {
-  //     throw Exception(e);
-  //   }
-  // }
-
   //get current user & userid
   User? getCurrentUser() => _auth.currentUser;
   String getCurrentUserid() => _auth.currentUser!.uid;
