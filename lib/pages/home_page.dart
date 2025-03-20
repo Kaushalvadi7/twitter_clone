@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone/components/my_drawer.dart';
-import 'package:twitter_clone/components/my_input_alert_box.dart';
 import 'package:twitter_clone/components/my_post_tile.dart';
 import 'package:twitter_clone/helper/navigate_pages.dart';
 import 'package:twitter_clone/models/post.dart';
+import 'package:twitter_clone/pages/post_message_page.dart';
 import 'package:twitter_clone/pages/search_page.dart';
 import 'package:twitter_clone/services/database/database_provider.dart';
 
@@ -75,9 +75,6 @@ class _HomeContentState extends State<HomeContent> {
     listen: false,
   );
 
-  //text controllers
-  final _messageController = TextEditingController();
-
   //load all posts
   Future<void> loadAllPosts() async {
     await databaseProvider.loadAllPosts();
@@ -88,15 +85,9 @@ class _HomeContentState extends State<HomeContent> {
     showDialog(
       context: context,
       builder:
-          (context) => MyInputAlertBox(
-        textController: _messageController,
-        hintText: "What's on your mind?",
-        onPressed: () async {
-          //post in db
-          await postMessage(_messageController.text);
-        },
-        onPressedText: "Post",
-      ),
+          (context) => PostMessagePage()
+
+
     );
   }
 

@@ -23,6 +23,9 @@ class MyPostTile extends StatefulWidget {
 }
 
 class _MyPostTileState extends State<MyPostTile> {
+  bool _isExpanded = false; // Track expansion state
+
+
   //provider
   late final listeningProvider = Provider.of<DatabaseProvider>(context);
   late final databaseProvider = Provider.of<DatabaseProvider>(
@@ -351,12 +354,55 @@ class _MyPostTileState extends State<MyPostTile> {
 
             const SizedBox(height: 20),
 
-            //message
-            Text(
-              widget.post.message,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.inversePrimary,
-              ),
+            // Message with "See More"
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final textSpan = TextSpan(
+                  text: widget.post.message,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                  ),
+                );
+
+                final textPainter = TextPainter(
+                  text: textSpan,
+                  maxLines: 7,
+                  textDirection: TextDirection.ltr,
+                );
+
+                textPainter.layout(maxWidth: constraints.maxWidth);
+
+                final isOverflowing = textPainter.didExceedMaxLines;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.post.message,
+                      maxLines: _isExpanded ? null : 7,
+                      overflow: _isExpanded
+                          ? TextOverflow.visible
+                          : TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                      ),
+                    ),
+                    if (isOverflowing)
+                      GestureDetector(
+                        onTap: () {
+                          setState(() => _isExpanded = !_isExpanded);
+                        },
+                        child: Text(
+                          _isExpanded ? "See Less" : "See More",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
             ),
 
             const SizedBox(height: 20),
