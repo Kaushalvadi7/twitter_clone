@@ -45,11 +45,13 @@ This project aims to provide a **smooth, interactive, and engaging social media 
 Make sure you have Flutter installed:  
 ```bash
 flutter --version
+```
 
 ### **1️⃣ Clone the Repository:**  
 ```bash
 git clone https://github.com/Kaushalvadi7/twitter_clone.git
 cd twitter_clone
+```
 
 ### **2️⃣ Set up Firebase:**  
 - Create a new project on the [Firebase Console](https://console.firebase.google.com/).  
@@ -60,6 +62,7 @@ cd twitter_clone
 ### **3️⃣ Install Dependencies:**  
 ```bash
 flutter pub get
+```
 
 4.  **Run the Application:**
     ```bash
@@ -84,14 +87,17 @@ Contributions are welcome! If you find a bug or have suggestions, feel free to:
 2️⃣ **Create a new branch:**  
 ```bash
 git checkout -b feature/amazing-feature
+```
 
 3️⃣ **Commit your changes:**  
 ```bash
 git commit -m 'Add some amazing feature'
+```
 
 4️⃣ **Push to the branch:**
 ```bash
 git push origin feature/amazing-feature
+```
 
 5️⃣ **Open a Pull Request**
 
