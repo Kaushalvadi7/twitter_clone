@@ -70,7 +70,7 @@ class _PostMessagePageState extends State<PostMessagePage> {
                 child: TextField(
                   controller: _messageController,
                   maxLines: null,
-                  maxLength: 280,
+                  maxLength: 500,
                   decoration: const InputDecoration(
                     hintText: "What's happening?",
                     border: InputBorder.none,
