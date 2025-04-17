@@ -422,6 +422,14 @@ class DatabaseService {
         .collection("Followers")
         .doc(uid)
         .delete();
+
+    // remove current user from target user's followers
+    await _db
+        .collection("Users")
+        .doc(uid)
+        .collection("Followers")
+        .doc(currentUserId)
+        .delete();
   }
 
   //Get user's followers list of uids
