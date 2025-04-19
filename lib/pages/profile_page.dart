@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone/components/my_bio_box.dart';
@@ -8,6 +9,8 @@ import 'package:twitter_clone/components/my_profile_stats.dart';
 import 'package:twitter_clone/helper/navigate_pages.dart';
 import 'package:twitter_clone/models/user.dart';
 import 'package:twitter_clone/pages/follow_list_page.dart';
+import 'package:twitter_clone/pages/post_message_page.dart';
+import 'package:twitter_clone/pages/search_page.dart';
 import 'package:twitter_clone/services/auth/auth_service.dart';
 import 'package:twitter_clone/services/database/database_provider.dart';
 
@@ -146,6 +149,17 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  //show post message page
+  void _openPostMessageBox() {
+    showDialog(
+        context: context,
+        builder:
+            (context) => PostMessagePage()
+
+
+    );
+  }
+
   //build ui
   @override
   Widget build(BuildContext context) {
@@ -162,16 +176,76 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       //app bar
       appBar: AppBar(
+        backgroundColor: const Color(0xFF1DA1F2),
         centerTitle: true,
         title: Text(
           _isLoading ? '' : user!.name,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        foregroundColor: Theme.of(context).colorScheme.primary,
         leading: IconButton(
+          style: IconButton.styleFrom(
+            backgroundColor: Colors.black45,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.all(8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25),
+            ),
+          ),
           onPressed: () => goHomePage(context),
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_rounded,size: 28),
         ),
+
+        //search button
+        actions: [
+          IconButton(
+            style: IconButton.styleFrom(
+              backgroundColor: Colors.black45,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.all(8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
+            onPressed: () {
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SearchPage()),
+            );},
+            icon: const Icon(Icons.search,size: 28),
+          ),
+          const SizedBox(width: 5),
+          IconButton(
+            style: IconButton.styleFrom(
+              backgroundColor: Colors.black45,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.all(9),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
+            onPressed: () {},
+            icon: const Icon(Icons.more_vert,size: 28),
+          ),
+          // ElevatedButton(
+          //   style: ElevatedButton.styleFrom(
+          //     backgroundColor: Colors.black54,  // medium black background
+          //     foregroundColor: Colors.white,    // white text/icon
+          //     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(12),
+          //     ),
+          //   ),
+          //   onPressed: () {
+          //     // your action
+          //   },
+          //   child: const Text(
+          //     'Edit Profile',
+          //     style: TextStyle(fontWeight: FontWeight.bold),
+          //   ),
+          // ),
+          const SizedBox(width: 10)
+        ],
+
       ),
 
       //body
@@ -288,6 +362,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
               ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xFF1DA1F2),
+        onPressed: _openPostMessageBox,
+        child: const Icon(Icons.add),
       ),
     );
   }
