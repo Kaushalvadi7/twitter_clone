@@ -366,7 +366,7 @@ class _MyPostTileState extends State<MyPostTile> {
 
                 final textPainter = TextPainter(
                   text: textSpan,
-                  maxLines: 7,
+                  maxLines: 4,
                   textDirection: TextDirection.ltr,
                 );
 
@@ -400,7 +400,35 @@ class _MyPostTileState extends State<MyPostTile> {
                           ),
                         ),
                       ),
+                    if (widget.post.imageUrl != null && widget.post.imageUrl!.isNotEmpty)
+                      Column(
+                        children: [
+                          const SizedBox(height: 10),
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxHeight: 300,
+                                ),
+                                child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    widget.post.imageUrl!,
+                                    fit: BoxFit.contain,
+                                    width: double.infinity,
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return const Center(
+                                        child: CircularProgressIndicator());
+                                    },
+                                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image),
+                                  ),
+                              ),
+                            ),
+
+                          const SizedBox(height: 10),
+                        ],
+                      ),
                   ],
+
                 );
               },
             ),

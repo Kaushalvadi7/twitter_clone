@@ -43,7 +43,8 @@ class DatabaseService {
 
     //extract username from email
     String username = email.split('@')[0];
-    //e.g. kaushal@gmial.com -> username: mitch
+    //e.g. kaushal@gmail.com -> username: mitch
+
 
     //create a user profile
     UserProfile user = UserProfile(
@@ -54,7 +55,7 @@ class DatabaseService {
       bio: '',
     );
 
-    //convert user into a map so that we can store in firbase
+    //convert user into a map so that we can store in firebase
     final userMap = user.toMap();
 
     //save user info in firebase
@@ -129,7 +130,7 @@ class DatabaseService {
    */
 
   //Post a message
-  Future<void> postMessageInFirebase(String message) async {
+  Future<void> postMessageInFirebase(String message, {String? imageUrl}) async {
     try {
       //get current uid
       String uid = _auth.currentUser!.uid;
@@ -147,6 +148,7 @@ class DatabaseService {
         timestamp: Timestamp.now(),
         likeCount: 0,
         likedBy: [],
+        imageUrl: imageUrl,
       );
 
       //convert post object -> map

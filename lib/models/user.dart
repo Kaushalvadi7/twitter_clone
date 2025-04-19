@@ -33,7 +33,7 @@ class UserProfile {
   /*
   app -> firebase
 
-  covert a user pofile to a map(so that we can store in firebase)
+  covert a user profile to a map(so that we can store in firebase)
    */
   Map<String, dynamic> toMap() {
     return {

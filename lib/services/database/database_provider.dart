@@ -39,9 +39,9 @@ class DatabaseProvider extends ChangeNotifier {
   List<Post> get followingPosts => _followingPosts;
 
   //post message
-  Future<void> postMessage(String message) async {
+  Future<void> postMessage(String message, {String? imageUrl}) async {
     //post message in firebase
-    await _db.postMessageInFirebase(message);
+    await _db.postMessageInFirebase(message,  imageUrl: imageUrl);
 
     //reload data from firebase
     await loadAllPosts();

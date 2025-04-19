@@ -80,7 +80,7 @@ class _HomeContentState extends State<HomeContent> {
     await databaseProvider.loadAllPosts();
   }
 
-  //show post message dialog box
+  //show post message page
   void _openPostMessageBox() {
     showDialog(
       context: context,
