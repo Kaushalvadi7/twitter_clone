@@ -53,6 +53,9 @@ class DatabaseService {
       email: email,
       username: username,
       bio: '',
+      profileImageUrl: '',
+      birthDate: '',
+      joinedDate: DateTime.now().toIso8601String().split('T')[0],
     );
 
     //convert user into a map so that we can store in firebase
@@ -74,6 +77,34 @@ class DatabaseService {
       // ignore: avoid_print
       print(e);
       return null;
+    }
+  }
+
+  //update user profile
+  Future<void> updateUserProfileFirebase({
+    required String name,
+    required String username,
+    String? profileImageUrl,
+    String? birthDate,
+  }) async {
+    String uid = AuthService().getCurrentUserid();
+
+    Map<String, dynamic> updates = {
+      'name': name,
+      'username': username,
+    };
+
+    if (profileImageUrl != null) {
+      updates['profileImageUrl'] = profileImageUrl;
+    }
+    if (birthDate != null) {
+      updates['birthDate'] = birthDate;
+    }
+
+    try {
+      await _db.collection("Users").doc(uid).update(updates);
+    } catch (e) {
+      print('Error updating user profile: $e');
     }
   }
 

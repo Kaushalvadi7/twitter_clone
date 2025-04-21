@@ -26,6 +26,21 @@ class DatabaseProvider extends ChangeNotifier {
   //update user bio
   Future<void> updateBio(String bio) => _db.updateUserBioFirebase(bio);
 
+  //update edit profile
+  Future<void> updateUserProfile({
+    required String name,
+    required String username,
+    String? profileImageUrl,
+    String? birthDate,
+  }) =>
+      _db.updateUserProfileFirebase(
+        name: name,
+        username: username,
+        profileImageUrl: profileImageUrl,
+        birthDate: birthDate,
+      );
+
+
   /*
   Posts
    */

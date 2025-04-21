@@ -6,6 +6,9 @@ class UserProfile {
   final String email;
   final String username;
   final String bio;
+  final String? profileImageUrl;
+  final String? birthDate;
+  final String? joinedDate;
 
   UserProfile({
     required this.uid,
@@ -13,12 +16,15 @@ class UserProfile {
     required this.email,
     required this.username,
     required this.bio,
+    this.profileImageUrl,
+    this.birthDate,
+    this.joinedDate,
   });
 
   /* 
   firebase -> app
 
-  convert firestore document to user profile (so thaat we can use in our app)
+  convert firestore document to user profile (so that we can use in our app)
   */
   factory UserProfile.fromDocument(DocumentSnapshot doc) {
     return UserProfile(
@@ -27,6 +33,10 @@ class UserProfile {
       email: doc['email'],
       username: doc['username'],
       bio: doc['bio'],
+      profileImageUrl: doc['profileImageUrl'],
+      birthDate: doc['birthDate'],
+      joinedDate: doc['joinedDate'],
+
     );
   }
 
@@ -42,6 +52,9 @@ class UserProfile {
       'email': email,
       'username': username,
       'bio': bio,
+      'profileImageUrl': profileImageUrl,
+      'birthDate': birthDate,
+      'joinedDate': joinedDate,
     };
   }
 }
