@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone/components/my_bio_box.dart';
@@ -13,6 +12,7 @@ import 'package:twitter_clone/pages/post_message_page.dart';
 import 'package:twitter_clone/pages/search_page.dart';
 import 'package:twitter_clone/services/auth/auth_service.dart';
 import 'package:twitter_clone/services/database/database_provider.dart';
+import 'edit_profile_page.dart';
 
 class ProfilePage extends StatefulWidget {
   //user id
@@ -151,13 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   //show post message page
   void _openPostMessageBox() {
-    showDialog(
-        context: context,
-        builder:
-            (context) => PostMessagePage()
-
-
-    );
+    showDialog(context: context, builder: (context) => PostMessagePage());
   }
 
   //build ui
@@ -192,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           onPressed: () => goHomePage(context),
-          icon: const Icon(Icons.arrow_back_rounded,size: 28),
+          icon: const Icon(Icons.arrow_back_rounded, size: 28),
         ),
 
         //search button
@@ -208,10 +202,11 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             onPressed: () {
               Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SearchPage()),
-            );},
-            icon: const Icon(Icons.search,size: 28),
+                context,
+                MaterialPageRoute(builder: (context) => SearchPage()),
+              );
+            },
+            icon: const Icon(Icons.search, size: 28),
           ),
           const SizedBox(width: 5),
           IconButton(
@@ -224,60 +219,157 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             onPressed: () {},
-            icon: const Icon(Icons.more_vert,size: 28),
+            icon: const Icon(Icons.more_vert, size: 28),
           ),
-          // ElevatedButton(
-          //   style: ElevatedButton.styleFrom(
-          //     backgroundColor: Colors.black54,  // medium black background
-          //     foregroundColor: Colors.white,    // white text/icon
-          //     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          //     shape: RoundedRectangleBorder(
-          //       borderRadius: BorderRadius.circular(12),
-          //     ),
-          //   ),
-          //   onPressed: () {
-          //     // your action
-          //   },
-          //   child: const Text(
-          //     'Edit Profile',
-          //     style: TextStyle(fontWeight: FontWeight.bold),
-          //   ),
-          // ),
-          const SizedBox(width: 10)
-        ],
 
+          const SizedBox(width: 10),
+        ],
       ),
 
       //body
       body: ListView(
         children: [
-          //username handle
-          Center(
-            child: Text(
-              _isLoading ? '' : '@${user!.username}',
-              style: TextStyle(color: Theme.of(context).colorScheme.primary),
-            ),
-          ),
-
-          const SizedBox(height: 25),
-
           //profile picture
-          Center(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              padding: EdgeInsets.all(25),
-              child: Icon(
-                Icons.person_2,
-                size: 72,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 12.0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: Colors.blue, // Border color
+                    shape: BoxShape.circle,
+                  ),
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage:
+                        user != null &&
+                                user!.profileImageUrl != null &&
+                                user!.profileImageUrl!.isNotEmpty
+                            ? NetworkImage(user!.profileImageUrl!)
+                            : null,
+                    child:
+                        user == null ||
+                                user!.profileImageUrl == null ||
+                                user!.profileImageUrl!.isEmpty
+                            ? const Icon(Icons.person, size: 40)
+                            : null,
+                  ),
+                ),
+
+                // Edit Button
+                if (user != null && user!.uid == currentUserId)
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor:
+                          Theme.of(context).colorScheme.inversePrimary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 13,
+                      ),
+                      elevation: 0, // Removes shadow for cleaner look
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(
+                          color:
+                              Theme.of(
+                                context,
+                              ).colorScheme.inversePrimary, // Border color
+                          width: 1.5, // Border thickness
+                        ),
+                      ),
+                    ),
+                    onPressed: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProfilePage(user: user!),
+                        ),
+                      );
+                      // Refresh user data after coming back from EditProfilePage
+                      await loadUser();
+                      setState(() {}); // Optional: force rebuild if needed
+                    },
+                    child: const Text(
+                      'Edit Profile',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
 
-          const SizedBox(height: 25),
+          // name and verification
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const SizedBox(width: 25),
+                  Text(
+                    _isLoading ? '' : user!.name,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Image.asset(
+                    'assets/images/twitter_logo.jpg', // Use your verified badge icon path
+                    height: 18,
+                    width: 18,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Get Verified",
+                    style: TextStyle(
+                      color: Colors.blueAccent,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const SizedBox(width: 25),
+                  //username handle
+                  Text(
+                    _isLoading ? '' : '@${user!.username}',
+                    style: const TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          Row(
+            children: [
+              Icon(Icons.cake, size: 18, color: Colors.grey[600]),
+              SizedBox(width: 4),
+              Text(
+                'Born ${user?.birthDate?.isNotEmpty == true ? user?.birthDate! : 'N/A'}',
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+              ),
+              SizedBox(width: 16),
+              Icon(Icons.calendar_today, size: 18, color: Colors.grey[600]),
+              SizedBox(width: 4),
+              Text(
+                'Joined ${user?.joinedDate?.isNotEmpty == true ? user?.joinedDate! : 'N/A'}',
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+              ),
+            ],
+          ),
 
           //profile stats -> number of posts / follower /following
           MyProfileStats(
