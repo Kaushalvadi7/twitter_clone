@@ -64,48 +64,48 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 110),
-          
+                  const SizedBox(height: 49),
+
                   //twitter logo
                   Image.asset(
                     'assets/images/twitter_logo.jpg',
                     height: 150,
                     width: 200,
                   ),
-          
-                  const SizedBox(height: 30),
+
+                  const SizedBox(height: 80),
                   //message,app slogan
                   Center(
                     child: Text(
                       "Welcome Back! Log in to continue",
                       style: TextStyle(
-                        fontSize: 19,
+                        fontSize: 20,
                         color: Theme.of(context).colorScheme.inversePrimary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
-          
-                  const SizedBox(height: 25),
-          
+
+                  const SizedBox(height: 29),
+
                   //email Text field
                   MyTextField(
                     controller: emailController,
                     hintText: "Enter Email Address ..",
                     obscureText: false,
                   ),
-          
-                  const SizedBox(height: 10),
-          
+
+                  const SizedBox(height: 21),
+
                   //password field
                   MyTextField(
                     controller: pwController,
                     hintText: "Enter Password ..",
                     obscureText: true,
                   ),
-          
-                  const SizedBox(height: 10),
-          
+
+                  const SizedBox(height: 22),
+
                   //forgot password
                   Align(
                     alignment: Alignment.centerRight,
@@ -117,14 +117,14 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-          
-                  const SizedBox(height: 25),
-          
+
+                  const SizedBox(height: 200),
+
                   //sign in button
                   MyButton(text: "Login", onTap: login),
-          
-                  const SizedBox(height: 50),
-          
+
+                  const SizedBox(height: 30),
+
                   //Not a member? Register now
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

@@ -17,7 +17,16 @@ class MyTextField extends StatelessWidget {
     return TextField(
       controller: controller,
       obscureText: obscureText,
+      style: TextStyle(
+        fontSize: 20,
+        height: 1.6,
+      ),
       decoration: InputDecoration(
+        // Padding inside the TextField
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 18, // This controls the height
+          horizontal: 14,
+        ),
         //border when unselected
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
