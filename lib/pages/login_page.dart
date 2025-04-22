@@ -4,6 +4,8 @@ import 'package:twitter_clone/components/my_loading_circle.dart';
 import 'package:twitter_clone/components/my_text_field.dart';
 import 'package:twitter_clone/services/auth/auth_service.dart';
 
+import 'forgot_password_page.dart';
+
 class LoginPage extends StatefulWidget {
   final void Function() onTap;
 
@@ -109,11 +111,18 @@ class _LoginPageState extends State<LoginPage> {
                   //forgot password
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context){
+                          return ForgotPasswordPage();
+                        }));
+                      },
+                      child: Text(
+                        "Forgot Password?",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
