@@ -24,27 +24,38 @@ class MyFollowButton extends StatelessWidget {
   Widget build(BuildContext context) {
     //padding outside
     return Padding(
-      padding: const EdgeInsets.all(25.0),
+      padding: const EdgeInsets.all(10.0),
 
       //Curve corners
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(22),
 
         //Material button
         child: MaterialButton(
           //padding inside
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(horizontal: 29,vertical: 14),
           onPressed: onPressed,
 
           //color
           color:
-              isFollowing ? Theme.of(context).colorScheme.primary : Colors.blue,
+              isFollowing ? Colors.white : Colors.blue,
+
+          // add border when following
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(22),
+            side: BorderSide(color: Theme.of(context).colorScheme.inversePrimary)
+          ),
+
+          // remove splash color when background is transparent
+          splashColor: isFollowing ? Colors.black26 : null,
+
 
           //text
           child: Text(
-            isFollowing ? 'Unfollow' : 'Follow',
+            isFollowing ? 'Following' : 'Follow',
             style: TextStyle(
-              color: Theme.of(context).colorScheme.tertiary,
+              fontSize: 20,
+              color: Theme.of(context).colorScheme.inversePrimary,
               fontWeight: FontWeight.bold,
             ),
           ),

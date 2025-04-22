@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone/components/my_bio_box.dart';
 import 'package:twitter_clone/components/my_follow_button.dart';
@@ -149,6 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+
   //show post message page
   void _openPostMessageBox() {
     showDialog(context: context, builder: (context) => PostMessagePage());
@@ -261,7 +263,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             : null,
                   ),
                 ),
-
                 // Edit Button
                 if (user != null && user!.uid == currentUserId)
                   ElevatedButton(
@@ -270,7 +271,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       foregroundColor:
                           Theme.of(context).colorScheme.inversePrimary,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 25,
+                        horizontal: 20,
                         vertical: 10,
                       ),
                       elevation: 0, // Removes shadow for cleaner look
@@ -301,6 +302,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
+
+                //follow /unfollow button
+                //only show if the user is viewing someone else's profile
+                if (user != null && user!.uid != currentUserId)
+                  MyFollowButton(onPressed: togglefollow, isFollowing: _isFollowing),
               ],
             ),
           ),
@@ -339,7 +345,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               Row(
                 children: [
-                  const SizedBox(width: 26),
+                  const SizedBox(width: 25),
                   //username handle
                   Text(
                     _isLoading ? '' : '@${user!.username}',
@@ -349,22 +355,28 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
+
+
           const SizedBox(height: 18,),
           Row(
             children: [
-              const SizedBox(width: 26,),
-              Icon(Icons.cake_outlined, size: 19, color: Colors.grey),
-              SizedBox(width: 7),
-              Text(
-                'Born ${user?.birthDate?.isNotEmpty == true ? user?.birthDate! : 'N/A'}',
-                style: TextStyle(fontSize: 18, color: Colors.grey),
+              const SizedBox(width: 25,),
+              Icon(Icons.cake_outlined, size: 17, color: Colors.grey),
+              SizedBox(width: 5),
+              Flexible(
+                child: Text(
+                  'Born ${user?.birthDate?.isNotEmpty == true ? formatDate(user!.birthDate!) : 'N/A'}',
+                  style: TextStyle(fontSize: 17, color: Colors.grey),
+                ),
               ),
-              SizedBox(width: 18),
-              Icon(Icons.calendar_month_rounded, size: 19, color: Colors.grey),
-              SizedBox(width: 7),
-              Text(
-                'Joined ${user?.joinedDate?.isNotEmpty == true ? user?.joinedDate! : 'N/A'}',
-                style: TextStyle(fontSize: 18, color: Colors.grey),
+              SizedBox(width: 10),
+              Icon(Icons.calendar_month_rounded, size: 17, color: Colors.grey),
+              SizedBox(width: 5),
+              Flexible(
+                child: Text(
+                  'Joined ${user?.joinedDate?.isNotEmpty == true ? formatDate(user!.joinedDate!) : 'N/A'}',
+                  style: TextStyle(fontSize: 17, color: Colors.grey),
+                ),
               ),
             ],
           ),
@@ -385,12 +397,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
 
           const SizedBox(height: 25),
-
-          //follow /unfollow button
-          //only show if the user is viewing someone else's profile
-          if (user != null && user!.uid != currentUserId)
-            MyFollowButton(onPressed: togglefollow, isFollowing: _isFollowing),
-
           //edit bio
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -460,5 +466,15 @@ class _ProfilePageState extends State<ProfilePage> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+}
+
+//date format
+String formatDate(String dateString) {
+  try {
+    DateTime date = DateTime.parse(dateString);
+    return DateFormat('MMMM d, y').format(date); // e.g. April 22, 2025
+  } catch (e) {
+    return 'N/A';
   }
 }
