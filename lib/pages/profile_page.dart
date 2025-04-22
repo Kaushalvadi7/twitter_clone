@@ -270,17 +270,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       foregroundColor:
                           Theme.of(context).colorScheme.inversePrimary,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 32,
-                        vertical: 13,
+                        horizontal: 25,
+                        vertical: 10,
                       ),
                       elevation: 0, // Removes shadow for cleaner look
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(28),
                         side: BorderSide(
-                          color:
-                              Theme.of(
-                                context,
-                              ).colorScheme.inversePrimary, // Border color
+                          color: Colors.grey, // Border color
                           width: 1.5, // Border thickness
                         ),
                       ),
@@ -300,7 +297,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       'Edit Profile',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        fontSize: 18,
                       ),
                     ),
                   ),
@@ -325,24 +322,24 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(width: 8),
                   Image.asset(
-                    'assets/images/twitter_logo.jpg', // Use your verified badge icon path
-                    height: 18,
-                    width: 18,
+                    'assets/images/verified.png', // Use your verified badge icon path
+                    height: 20,
+                    width: 20,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 5),
                   Text(
                     "Get Verified",
                     style: TextStyle(
                       color: Colors.blueAccent,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],
               ),
               Row(
                 children: [
-                  const SizedBox(width: 25),
+                  const SizedBox(width: 26),
                   //username handle
                   Text(
                     _isLoading ? '' : '@${user!.username}',
@@ -352,24 +349,26 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-
+          const SizedBox(height: 18,),
           Row(
             children: [
-              Icon(Icons.cake, size: 18, color: Colors.grey[600]),
-              SizedBox(width: 4),
+              const SizedBox(width: 26,),
+              Icon(Icons.cake_outlined, size: 19, color: Colors.grey),
+              SizedBox(width: 7),
               Text(
                 'Born ${user?.birthDate?.isNotEmpty == true ? user?.birthDate! : 'N/A'}',
-                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                style: TextStyle(fontSize: 18, color: Colors.grey),
               ),
-              SizedBox(width: 16),
-              Icon(Icons.calendar_today, size: 18, color: Colors.grey[600]),
-              SizedBox(width: 4),
+              SizedBox(width: 18),
+              Icon(Icons.calendar_month_rounded, size: 19, color: Colors.grey),
+              SizedBox(width: 7),
               Text(
                 'Joined ${user?.joinedDate?.isNotEmpty == true ? user?.joinedDate! : 'N/A'}',
-                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                style: TextStyle(fontSize: 18, color: Colors.grey),
               ),
             ],
           ),
+          const SizedBox(height: 8),
 
           //profile stats -> number of posts / follower /following
           MyProfileStats(

@@ -26,82 +26,86 @@ class MyProfileStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        const SizedBox(width: 27,),
         //posts
-        Expanded(
-          child: GestureDetector(
+        GestureDetector(
             onTap: () {},
-            child: Column(
+            child: Row(
               children: [
                 Text(
                   postCount.toString(),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 18,
                     color: Theme.of(context).colorScheme.inversePrimary,
                   ),
                 ),
+                const SizedBox(width: 5),
                 Text(
                   'Posts',
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontSize: 18,
+                    color: Colors.grey,
                   ),
                 ),
               ],
             ),
           ),
-        ),
+
+        const SizedBox(width: 15,),
 
         //followers
-        Expanded(
-          child: GestureDetector(
+        GestureDetector(
             onTap: onTap,
-            child: Column(
+            child: Row(
               children: [
                 Text(
                   followersCount.toString(),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 18,
                     color: Theme.of(context).colorScheme.inversePrimary,
                   ),
                 ),
+                const SizedBox(width: 5),
                 Text(
                   'Followers',
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontSize: 18,
+                    color: Colors.grey,
                   ),
                 ),
               ],
             ),
           ),
-        ),
+        const SizedBox(width: 15,),
 
         //following
-        Expanded(
-          child: GestureDetector(
+        GestureDetector(
             onTap: onTap,
-            child: Column(
+            child: Row(
               children: [
                 Text(
                   followingCount.toString(),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 18,
                     color: Theme.of(context).colorScheme.inversePrimary,
                   ),
                 ),
+                const SizedBox(width: 5),
                 Text(
                   'Following',
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontSize: 18,
+                    color: Colors.grey,
                   ),
                 ),
               ],
             ),
           ),
-        ),
       ],
     );
   }
