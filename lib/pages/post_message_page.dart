@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:twitter_clone/services/database/database_provider.dart';
-
+import '../models/user.dart';
+import '../services/auth/auth_service.dart';
 import '../services/cloudinary/cloudinary_service.dart';
+import '../services/database/database_provider.dart';
 
 class PostMessagePage extends StatefulWidget {
   const PostMessagePage({super.key});
@@ -18,6 +19,37 @@ class _PostMessagePageState extends State<PostMessagePage> {
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
   bool _isPosting = false;
+  final FocusNode _focusNode = FocusNode();
+
+  UserProfile? _currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+    //Request
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadUserProfile() async {
+    final uid = AuthService().getCurrentUserid();
+    final user = await Provider.of<DatabaseProvider>(
+      context,
+      listen: false,
+    ).userProfile(uid);
+    setState(() {
+      _currentUser = user;
+    });
+  }
 
   void _showEmptyPostAlert() {
     showDialog(
@@ -73,18 +105,29 @@ class _PostMessagePageState extends State<PostMessagePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Post'),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () => Navigator.pop(context),
+        ),
         actions: [
           TextButton(
             onPressed: _isPosting ? null : _postMessage,
             child:
                 _isPosting
-                    ? const CircularProgressIndicator()
+                    ? const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    )
                     : const Text(
                       'Post',
                       style: TextStyle(
                         color: Color(0xFF1DA1F2),
                         fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
                     ),
           ),
@@ -98,34 +141,68 @@ class _PostMessagePageState extends State<PostMessagePage> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.person, size: 40, color: Colors.grey),
-                  const SizedBox(width: 10),
+                  _currentUser?.profileImageUrl != null
+                      ? CircleAvatar(
+                        radius: 30,
+                        backgroundImage: NetworkImage(
+                          _currentUser!.profileImageUrl!,
+                        ),
+                      )
+                      : const Icon(Icons.person, size: 40, color: Colors.white),
+                  const SizedBox(width: 4),
                   Expanded(
-                    child: TextField(
-                      controller: _messageController,
-                      maxLines: null,
-                      maxLength: 750,
-                      decoration: const InputDecoration(
-                        hintText: "What's happening?",
-                        border: InputBorder.none,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 2,
+                      ),
+                      child: TextField(
+                        focusNode: _focusNode,
+                        controller: _messageController,
+                        maxLines: null,
+                        maxLength: 750,
+                        cursorColor: Color(0xFF1DA1F2),
+                        decoration: const InputDecoration(
+                          hintText: "Add a Comment..",
+                          border: InputBorder.none,
+                          counterText: "",
+                        ),
+                        textAlign: TextAlign.justify,
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               if (_selectedImage != null)
-                Image.file(_selectedImage!, height: 200),
-              const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.file(_selectedImage!, height: 190),
+                  ),
+                ),
+              const SizedBox(height: 12),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.image),
+                    icon: const Icon(
+                      Icons.image,
+                      size: 28,
+                      color: Color(0xFF1DA1F2),
+                    ),
                     onPressed: () => _pickImage(ImageSource.gallery),
+                    tooltip: 'Pick from gallery',
                   ),
                   IconButton(
-                    icon: const Icon(Icons.camera_alt),
+                    icon: const Icon(
+                      Icons.camera_alt,
+                      size: 28,
+                      color: Color(0xFF1DA1F2),
+                    ),
                     onPressed: () => _pickImage(ImageSource.camera),
+                    tooltip: 'Open camera',
                   ),
                 ],
               ),
