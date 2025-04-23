@@ -22,7 +22,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       return showDialog(
         context: context,
         builder: (_) => const AlertDialog(
-          content: Text("Please enter your email address."),
+          content: Text("  Email address is required.\n   Please enter your email.",
+          style: TextStyle(fontSize: 18),),
         ),
       );
     }
@@ -49,7 +50,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple[200],
+        centerTitle: true,
+        title: const Text("Reset Password",
+        style: TextStyle(fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.grey[200],
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -59,7 +63,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             const Text(
               "Enter your email and we'll send you a password reset link",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 19),
             ),
             const SizedBox(height: 20),
             TextField(
@@ -72,19 +76,32 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                borderRadius: BorderRadius.circular(8),
               ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
             ),
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: passwordReset,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue[200],
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 25),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text("Reset Password"),
+              child: const Text("Reset Password",
+                  style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18)),
             ),
           ],
         ),

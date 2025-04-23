@@ -15,5 +15,6 @@ void showLoadingCircle(BuildContext context) {
 
 //hide loading circle
 void hideLoadingCircle(BuildContext context) {
-  Navigator.pop(context);
+  Navigator.of(context, rootNavigator: true).pop();
+  // Navigator.pop(context);
 }
