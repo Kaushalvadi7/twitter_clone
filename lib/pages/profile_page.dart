@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:twitter_clone/components/my_bio_box.dart';
 import 'package:twitter_clone/components/my_follow_button.dart';
 import 'package:twitter_clone/components/my_input_alert_box.dart';
@@ -220,9 +221,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 borderRadius: BorderRadius.circular(25),
               ),
             ),
-            onPressed: () {},
-            icon: const Icon(Icons.more_vert, size: 28),
+            onPressed: () {
+              Share.share(
+                'Check out this awesome profile on twitter_clone: https://twitter_clone.com/user/123',
+                subject: 'Profile Share',
+              );
+            },
+            icon: const Icon(Icons.share, size: 28),
           ),
+
 
           const SizedBox(width: 10),
         ],
@@ -333,6 +340,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 20,
                   ),
                   const SizedBox(width: 5),
+                  if (user != null && user!.uid == currentUserId)
                   Text(
                     "Get Verified",
                     style: TextStyle(

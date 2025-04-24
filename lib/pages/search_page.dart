@@ -11,8 +11,18 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  final FocusNode _focusNode = FocusNode();
+
   //text controller
   final _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
+  }
 
   //Build UI
   @override
@@ -28,15 +38,32 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       //appbar
       appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 15.0),
+          child: Icon(Icons.search,size: 24,
+          color: Theme.of(context).colorScheme.inversePrimary,),
+        ),
+        titleSpacing: 1,
         title: TextField(
+          focusNode: _focusNode,
           controller: _searchController,
           decoration: InputDecoration(
             hintText: "Search users..",
-            hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
+            hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary,fontSize: 16),
             border: InputBorder.none,
+            suffixIcon: _searchController.text.isNotEmpty
+                ? IconButton(
+              icon: Icon(Icons.clear,color: Theme.of(context).colorScheme.inversePrimary,),
+              onPressed: () {
+                _searchController.clear();
+                databaseProvider.searchUsers("");
+                setState(() {}); // refresh to hide the icon
+              },
+            )
+                : null,
           ),
 
-          //search will bigin after each new character has been type
+          //search will begin after each new character has been type
           onChanged: (value) {
             //search for users
             if (value.isNotEmpty) {
@@ -46,6 +73,7 @@ class _SearchPageState extends State<SearchPage> {
             else {
               databaseProvider.searchUsers("");
             }
+            setState(() {});
           },
         ),
       ),
