@@ -55,9 +55,10 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                   Navigator.pop(context);
 
                   //then navigate to the authgate
-                  Navigator.push(
+                  Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => AuthGate()),
+                      (route) => false
                   );
 
                   //delete account user

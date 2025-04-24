@@ -38,12 +38,12 @@ class MyFollowButton extends StatelessWidget {
 
           //color
           color:
-              isFollowing ? Colors.white : Colors.blue,
+              isFollowing ? Colors.blue : Colors.blue,
 
           // add border when following
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(22),
-            side: BorderSide(color: Theme.of(context).colorScheme.inversePrimary)
+            side: BorderSide(color: Theme.of(context).colorScheme.inversePrimary,width: 2)
           ),
 
           // remove splash color when background is transparent
@@ -55,7 +55,7 @@ class MyFollowButton extends StatelessWidget {
             isFollowing ? 'Following' : 'Follow',
             style: TextStyle(
               fontSize: 20,
-              color: Theme.of(context).colorScheme.inversePrimary,
+              color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
           ),

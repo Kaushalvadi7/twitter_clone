@@ -116,67 +116,140 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Edit Profile")),
+      appBar: AppBar(
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.inversePrimary),
+            onPressed: () => Navigator.pop(context),
+          ),
+          titleSpacing: 0,
+          title: Text("Edit Profile",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.inversePrimary),),
+        actions: [
+          TextButton(
+            onPressed: _isSaving ? null : _saveChanges,
+            child: _isSaving
+                ? const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            )
+                : const Text(
+              "Save",
+              style: TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              GestureDetector(
-                onTap: _pickImage,
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage:
-                      _pickedImage != null
-                          ? FileImage(_pickedImage!)
-                          : (widget.user.profileImageUrl != null &&
-                              widget.user.profileImageUrl!.isNotEmpty)
-                          ? NetworkImage(widget.user.profileImageUrl!)
-                              as ImageProvider
-                          : null,
-                  child:
-                      _pickedImage == null &&
-                              (widget.user.profileImageUrl == null ||
-                                  widget.user.profileImageUrl!.isEmpty)
-                          ? const Icon(Icons.person, size: 50)
-                          : null,
+              Stack(
+                alignment: Alignment.bottomRight,
+                children: [
+                  GestureDetector(
+                  onTap: _pickImage,
+                  child: CircleAvatar(
+                    radius: 60,
+                    backgroundImage:
+                        _pickedImage != null
+                            ? FileImage(_pickedImage!)
+                            : (widget.user.profileImageUrl != null &&
+                                widget.user.profileImageUrl!.isNotEmpty)
+                            ? NetworkImage(widget.user.profileImageUrl!)
+                                as ImageProvider
+                            : null,
+                    child:
+                        _pickedImage == null &&
+                                (widget.user.profileImageUrl == null ||
+                                    widget.user.profileImageUrl!.isEmpty)
+                            ? const Icon(Icons.person, size: 60, color: Colors.grey,)
+                            : null,
+                  ),
                 ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: GestureDetector(
+                      onTap: _pickImage,
+                      child: CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.blue,
+                        child: const Icon(
+                          Icons.camera_alt,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
-              TextField(
+              _buildTextField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: "Name"),
+                labelText: "Name",
+                icon: Icons.person,
               ),
-              const SizedBox(height: 10),
-              TextField(
+              const SizedBox(height: 20),
+              _buildTextField(
                 controller: _usernameController,
-                decoration: const InputDecoration(labelText: "Username"),
+                labelText: "Username",
+                icon: Icons.account_circle,
               ),
-              const SizedBox(height: 10),
-              TextField(
+              const SizedBox(height: 20),
+              _buildTextField(
                 controller: _bioController,
-                decoration: const InputDecoration(labelText: "Bio"),
-                maxLines: 3,
+                labelText: "Bio",
+                icon: Icons.info,
+                maxLines: 4,
               ),
-              const SizedBox(height: 10),
-              TextField(
+              const SizedBox(height: 15),
+              _buildTextField(
                 controller: _birthDateController,
+                labelText: "Birth Date",
+                icon: Icons.calendar_today,
                 readOnly: true,
                 onTap: _selectBirthDate,
-                decoration: const InputDecoration(labelText: "Birth Date"),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _isSaving ? null : _saveChanges,
-                child:
-                    _isSaving
-                        ? const CircularProgressIndicator()
-                        : const Text("Save Changes"),
-              ),
             ],
           ),
         ),
       ),
     );
   }
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    IconData? icon,
+    bool readOnly = false,
+    VoidCallback? onTap,
+    int? maxLines,
+  }) {
+    return TextField(
+
+      style: TextStyle(fontSize: 16,),
+      controller: controller,
+      readOnly: readOnly,
+      onTap: onTap,
+      maxLines: maxLines ?? 1,
+      decoration: InputDecoration(
+        labelText: labelText,
+        prefixIcon: icon != null ? Icon(icon, color: Colors.blue) : null,
+        filled: true,
+        // fillColor: Colors.grey[100],
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.blue, width: 2),
+        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+      ),
+    );
+  }
 }
+
