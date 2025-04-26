@@ -141,16 +141,23 @@ class _PostMessagePageState extends State<PostMessagePage> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _currentUser?.profileImageUrl != null
+                  _currentUser != null
+                      ? (_currentUser!.profileImageUrl != null && _currentUser!.profileImageUrl!.isNotEmpty
                       ? CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage(
-                          _currentUser!.profileImageUrl!,
-                        ),
-                      )
-                      : const CircleAvatar(
-                        radius: 30,
-                      child: Icon(Icons.person, size: 30,)),
+                    radius: 30,
+                    backgroundImage: NetworkImage(_currentUser!.profileImageUrl!),
+                  )
+                      : CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.grey[300],
+                    child: const Icon(Icons.person, size: 30, color: Colors.black),
+                  )
+                  )
+                      : CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.grey[300],
+                    child: const Icon(Icons.person, size: 30, color: Colors.black),
+                  ),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Container(

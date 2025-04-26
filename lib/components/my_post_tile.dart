@@ -313,15 +313,17 @@ class _MyPostTileState extends State<MyPostTile> {
               child: Row(
                 children: [
                   //profile pic
-                  CircleAvatar(
+                  widget.post.profileImageUrl != null && widget.post.profileImageUrl!.isNotEmpty
+                      ? CircleAvatar(
                     radius: 20,
-                    backgroundImage: widget.post.profileImageUrl != null
-                        ? NetworkImage(widget.post.profileImageUrl!)
-                        : null,
-                    child: widget.post.profileImageUrl == null
-                        ? const Icon(Icons.person, size: 20)
-                        : null,
+                    backgroundImage: NetworkImage(widget.post.profileImageUrl!),
+                  )
+                      : CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.grey[300],
+                    child: const Icon(Icons.person, size: 20, color: Colors.black),
                   ),
+
 
                   const SizedBox(width: 10),
 
