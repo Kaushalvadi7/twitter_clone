@@ -170,23 +170,32 @@ class DatabaseService {
       UserProfile? user = await getUserFromFirebase(uid);
 
       //create a new post
-      Post newPost = Post(
-        id: '', //firebase will auto generate this
-        uid: uid,
-        name: user!.name,
-        username: user.username,
-        message: message,
-        timestamp: Timestamp.now(),
-        likeCount: 0,
-        likedBy: [],
-        imageUrl: imageUrl,
-      );
+      if(user != null) {
+        Post newPost = Post(
+          id: '',
+          //firebase will auto generate this
+          uid: uid,
+          name: user!.name,
+          username: user.username,
+          message: message,
+          timestamp: Timestamp.now(),
+          likeCount: 0,
+          likedBy: [],
+          imageUrl: imageUrl,
+          profileImageUrl: user.profileImageUrl,
 
-      //convert post object -> map
-      Map<String, dynamic> newPostMap = newPost.toMap();
+        );
 
-      //add to firebase
-      await _db.collection("Posts").add(newPostMap);
+        //convert post object -> map
+        Map<String, dynamic> newPostMap = newPost.toMap();
+
+        //add to firebase
+        await _db.collection("Posts").add(newPostMap);
+      }
+      else {
+        print("Error: User data is null. Cannot post message.");
+        throw Exception("User data is null"); // Explicitly throw an error
+      }
     }
     //catch any errors..
     catch (e) {

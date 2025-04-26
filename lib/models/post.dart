@@ -13,6 +13,7 @@ class Post {
   final int likeCount; // like count of this post
   final List<String> likedBy; //list of user Ids who liked this post
   final String? imageUrl;
+  final String? profileImageUrl;
 
   Post({
     required this.id,
@@ -23,7 +24,8 @@ class Post {
     required this.timestamp,
     required this.likeCount,
     required this.likedBy,
-    this.imageUrl
+    this.imageUrl,
+    this.profileImageUrl,
   });
 
   //Convert a Firebase document to a Post object (to use in our app)
@@ -38,6 +40,7 @@ class Post {
       likeCount: doc['likes'],
       likedBy: List<String>.from(doc['likedBy'] ?? []),
       imageUrl: doc['imageUrl'], // may be null if not present
+      profileImageUrl: doc['profileImageUrl'],
     );
   }
 
@@ -52,6 +55,7 @@ class Post {
       'likes': likeCount,
       'likedBy': likedBy,
       'imageUrl': imageUrl,
+      'profileImageUrl': profileImageUrl,
     };
   }
 }

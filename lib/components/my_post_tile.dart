@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone/components/my_input_alert_box.dart';
 import 'package:twitter_clone/helper/time_formatter.dart';
@@ -312,9 +313,14 @@ class _MyPostTileState extends State<MyPostTile> {
               child: Row(
                 children: [
                   //profile pic
-                  Icon(
-                    Icons.person,
-                    color: Theme.of(context).colorScheme.primary,
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: widget.post.profileImageUrl != null
+                        ? NetworkImage(widget.post.profileImageUrl!)
+                        : null,
+                    child: widget.post.profileImageUrl == null
+                        ? const Icon(Icons.person, size: 20)
+                        : null,
                   ),
 
                   const SizedBox(width: 10),

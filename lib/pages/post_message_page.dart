@@ -148,7 +148,9 @@ class _PostMessagePageState extends State<PostMessagePage> {
                           _currentUser!.profileImageUrl!,
                         ),
                       )
-                      : const Icon(Icons.person, size: 40, color: Colors.white),
+                      : const CircleAvatar(
+                        radius: 30,
+                      child: Icon(Icons.person, size: 30,)),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Container(

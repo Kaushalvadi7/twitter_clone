@@ -167,7 +167,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         _pickedImage == null &&
                                 (widget.user.profileImageUrl == null ||
                                     widget.user.profileImageUrl!.isEmpty)
-                            ? const Icon(Icons.person, size: 60, color: Colors.grey,)
+                            ? Icon(Icons.person, size: 60)
                             : null,
                   ),
                 ),
