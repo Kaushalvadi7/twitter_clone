@@ -79,109 +79,115 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      //body
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 49),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final screenHeight = constraints.maxHeight;
+            final screenWidth = constraints.maxWidth;
 
-                    //twitter logo
-                    Image.asset(
-                      'assets/images/twitter_logo.jpg',
-                      height: 150,
-                      width: 200,
-                    ),
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: screenHeight * 0.05),
 
-                    const SizedBox(height: 80),
-                    //create an account message
-                    Center(
-                      child: Text(
+                      // Logo
+                      Image.asset(
+                        'assets/images/twitter_logo.jpg',
+                        height: screenHeight * 0.18,
+                        width: screenWidth * 0.5,
+                      ),
+
+                      SizedBox(height: screenHeight * 0.05),
+
+                      // Heading
+                      Text(
                         "Let's create an account for you",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 19,
+                          fontSize: screenHeight * 0.025,
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
 
-                    const SizedBox(height: 29),
+                      SizedBox(height: screenHeight * 0.03),
 
-                    //name Text field
-                    MyTextField(
-                      controller: nameController,
-                      hintText: "Enter Your Name ..",
-                      obscureText: false,
-                    ),
+                      // Name
+                      MyTextField(
+                        controller: nameController,
+                        hintText: "Enter Your Name ..",
+                        obscureText: false,
+                      ),
 
-                    const SizedBox(height: 14),
+                      SizedBox(height: screenHeight * 0.015),
 
-                    //email Text field
-                    MyTextField(
-                      controller: emailController,
-                      hintText: "Enter Email Address ..",
-                      obscureText: false,
-                    ),
+                      // Email
+                      MyTextField(
+                        controller: emailController,
+                        hintText: "Enter Email Address ..",
+                        obscureText: false,
+                      ),
 
-                    const SizedBox(height: 14),
+                      SizedBox(height: screenHeight * 0.015),
 
-                    //password field
-                    MyTextField(
-                      controller: pwController,
-                      hintText: "Enter Password ..",
-                      obscureText: true,
-                    ),
+                      // Password
+                      MyTextField(
+                        controller: pwController,
+                        hintText: "Enter Password ..",
+                        obscureText: true,
+                      ),
 
-                    const SizedBox(height: 14),
+                      SizedBox(height: screenHeight * 0.015),
 
-                    //confirm password field
-                    MyTextField(
-                      controller: confirmPwController,
-                      hintText: "Confirm Password ..",
-                      obscureText: true,
-                    ),
+                      // Confirm Password
+                      MyTextField(
+                        controller: confirmPwController,
+                        hintText: "Confirm Password ..",
+                        obscureText: true,
+                      ),
 
-                    const SizedBox(height: 88),
+                      SizedBox(height: screenHeight * 0.08),
 
-                    //sign up button
-                    MyButton(text: "Register", onTap: register),
+                      // Register Button
+                      MyButton(text: "Register", onTap: register),
 
-                    const SizedBox(height: 30),
+                      SizedBox(height: screenHeight * 0.035),
 
-                    //Already a member? Login Here
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Already a member?",
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,fontSize: 16
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-
-                        //login here
-                        GestureDetector(
-                          onTap: widget.onTap,
-                          child: Text(
-                            "Login Here",
+                      // Login Link
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Already a member?",
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.inversePrimary,
-                              fontWeight: FontWeight.w700,fontSize: 17,
+                              fontSize: screenHeight * 0.018,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          const SizedBox(width: 5),
+                          GestureDetector(
+                            onTap: widget.onTap,
+                            child: Text(
+                              "Login Here",
+                              style: TextStyle(
+                                fontSize: screenHeight * 0.02,
+                                fontWeight: FontWeight.w700,
+                                color: Theme.of(context).colorScheme.inversePrimary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
