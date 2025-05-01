@@ -37,94 +37,94 @@ class MyDrawer extends StatelessWidget {
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Column(
-            children: [
-              //app logo
-              //twitter logo
-              Padding(
-                padding: const EdgeInsets.only(top: 40),
-                child: Image.asset(
-                  'assets/images/twitter_logo.jpg',
-                  height: 100,
-                  width: 150,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                //app logo
+                //twitter logo
+                Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Image.asset(
+                    'assets/images/twitter_logo.jpg',
+                    height: 100,
+                    width: 150,
+                  ),
                 ),
-              ),
-
-              const SizedBox(height: 10),
-
-
-              //divider line
-              Divider(color: Theme.of(context).colorScheme.secondary),
-              const SizedBox(height: 10),
-
-              //home list tile
-              MyDrawerTile(
-                title: "H O M E",
-                icon: Icons.home,
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-
-              //profile list tile
-              MyDrawerTile(
-                title: "P R O F I L E",
-                icon: Icons.person,
-                onTap: () {
-                  //pop menu drawer
-                  Navigator.pop(context);
-
-                  //go to the profile page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) =>
-                              ProfilePage(uid: _auth.getCurrentUserid()),
-                    ),
-                  );
-                },
-              ),
-
-              //search list tile
-              MyDrawerTile(
-                title: "S E A R C H",
-                icon: Icons.search,
-                onTap: () {
-                  //pop menu drawer
-                  Navigator.pop(context);
-
-                  //go to the search page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SearchPage()),
-                  );
-                },
-              ),
-
-              //settings tile
-              MyDrawerTile(
-                title: "S E T T I N G S",
-                icon: Icons.settings,
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SettingsPage()),
-                  );
-                },
-              ),
-
-              const Spacer(),
-
-              //logout tile
-              MyDrawerTile(
-                title: "L O G O U T",
-                icon: Icons.logout,
-                onTap: () => logout(context),
-              ),
-              const SizedBox(height: 10),
-            ],
+            
+                const SizedBox(height: 10),
+            
+            
+                //divider line
+                Divider(color: Theme.of(context).colorScheme.secondary),
+                const SizedBox(height: 10),
+            
+                //home list tile
+                MyDrawerTile(
+                  title: "H O M E",
+                  icon: Icons.home,
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+            
+                //profile list tile
+                MyDrawerTile(
+                  title: "P R O F I L E",
+                  icon: Icons.person,
+                  onTap: () {
+                    //pop menu drawer
+                    Navigator.pop(context);
+            
+                    //go to the profile page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) =>
+                                ProfilePage(uid: _auth.getCurrentUserid()),
+                      ),
+                    );
+                  },
+                ),
+            
+                //search list tile
+                MyDrawerTile(
+                  title: "S E A R C H",
+                  icon: Icons.search,
+                  onTap: () {
+                    //pop menu drawer
+                    Navigator.pop(context);
+            
+                    //go to the search page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchPage()),
+                    );
+                  },
+                ),
+            
+                //settings tile
+                MyDrawerTile(
+                  title: "S E T T I N G S",
+                  icon: Icons.settings,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SettingsPage()),
+                    );
+                  },
+                ),
+                
+                //logout tile
+                MyDrawerTile(
+                  title: "L O G O U T",
+                  icon: Icons.logout,
+                  onTap: () => logout(context),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
           ),
         ),
       ),

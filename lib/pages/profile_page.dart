@@ -118,7 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
             (context) => AlertDialog(
               title: const Text("Unfollow"),
               content: const Text(
-                "Are you sure you want to unfollow this user?",
+                "Are you sure you want to unfollow this user? Their posts will no longer appear in your home timeline, but you can still view their profile.",
               ),
               actions: [
                 //cancel

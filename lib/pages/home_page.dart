@@ -104,6 +104,13 @@ class _HomeContentState extends State<HomeContent> {
     loadAllPosts();
   }
 
+  //function to handle pull-to-refresh
+  Future<void> _refreshPosts() async {
+    // Reload the posts from the database
+    await loadAllPosts();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final listeningProvider = Provider.of<DatabaseProvider>(context);
@@ -163,24 +170,27 @@ class _HomeContentState extends State<HomeContent> {
 
   //build list ui given a list of posts
   Widget _buildPostList(List<Post> posts) {
-    return posts.isEmpty
-        ?
-    //post list is empty
-    const Center(child: Text("Nothing here..."))
-    //post list is Not Empty
-        : ListView.builder(
-      itemCount: posts.length,
-      itemBuilder: (context, index) {
-        //get each individual post
-        final post = posts[index];
+    return RefreshIndicator(
+      onRefresh: _refreshPosts,
+      child: posts.isEmpty
+          ?
+      //post list is empty
+      const Center(child: Text("Nothing here..."))
+      //post list is Not Empty
+          : ListView.builder(
+        itemCount: posts.length,
+        itemBuilder: (context, index) {
+          //get each individual post
+          final post = posts[index];
 
-        //return Post Tile UI
-        return MyPostTile(
-          post: post,
-          onUserTap: () => goUserPage(context, post.uid),
-          onPostTap: () => goPostPage(context, post),
-        );
-      },
+          //return Post Tile UI
+          return MyPostTile(
+            post: post,
+            onUserTap: () => goUserPage(context, post.uid),
+            onPostTap: () => goPostPage(context, post),
+          );
+        },
+      ),
     );
   }
 }
