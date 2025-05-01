@@ -16,34 +16,23 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  //access to firebase auth service
   final _auth = AuthService();
-
-  //text controller
   final TextEditingController emailController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
 
-  //login method
   void login() async {
-    //show loading circle
     showLoadingCircle(context);
 
-    //attempt login
     try {
       await _auth.signInWithEmailPassword(
         emailController.text,
         pwController.text,
       );
 
-      //finished loading
       if (mounted) hideLoadingCircle(context);
-    }
-    //catch any errors...
-    catch (e) {
-      //finished loading
+    } catch (e) {
       if (mounted) hideLoadingCircle(context);
 
-      //let user know of the error
       if (mounted) {
         showDialog(
           context: context,
@@ -55,113 +44,128 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      //body
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 49),
-
-                  //twitter logo
-                  Image.asset(
-                    'assets/images/twitter_logo.jpg',
-                    height: 150,
-                    width: 200,
-                  ),
-
-                  const SizedBox(height: 80),
-                  //message,app slogan
-                  Center(
-                    child: Text(
-                      "Welcome Back! Log in to continue",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 29),
-
-                  //email Text field
-                  MyTextField(
-                    controller: emailController,
-                    hintText: "Enter Email Address ..",
-                    obscureText: false,
-                  ),
-
-                  const SizedBox(height: 21),
-
-                  //password field
-                  MyTextField(
-                    controller: pwController,
-                    hintText: "Enter Password ..",
-                    obscureText: true,
-                  ),
-
-                  const SizedBox(height: 22),
-
-                  //forgot password
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context){
-                          return ForgotPasswordPage();
-                        }));
-                      },
-                      child: Text(
-                        "Forgot Password?",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 200),
-
-                  //sign in button
-                  MyButton(text: "Login", onTap: login),
-
-                  const SizedBox(height: 30),
-
-                  //Not a member? Register now
-                  Row(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.06, // Responsive horizontal padding
+                vertical: screenHeight * 0.03,  // Optional vertical padding
+              ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 600), // Max width for large screens
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        "Not a member?",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 16,
-                        ),
+                      SizedBox(height: screenHeight * 0.05),
+
+                      // Twitter logo
+                      Image.asset(
+                        'assets/images/twitter_logo.jpg',
+                        height: screenHeight * 0.2,
+                        width: screenWidth * 0.5,
+                        fit: BoxFit.contain,
                       ),
-                      const SizedBox(width: 5),
-                      GestureDetector(
-                        onTap: widget.onTap,
-                        child: Text(
-                          "Register now",
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.inversePrimary,
-                            fontWeight: FontWeight.w700,fontSize: 17
+
+                      SizedBox(height: screenHeight * 0.08),
+
+                      // Welcome message
+                      Text(
+                        "Welcome Back! Log in to continue",
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.045,
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+
+                      SizedBox(height: screenHeight * 0.04),
+
+                      // Email
+                      MyTextField(
+                        controller: emailController,
+                        hintText: "Enter Email Address ..",
+                        obscureText: false,
+                      ),
+
+                      SizedBox(height: screenHeight * 0.025),
+
+                      // Password
+                      MyTextField(
+                        controller: pwController,
+                        hintText: "Enter Password ..",
+                        obscureText: true,
+                      ),
+
+                      SizedBox(height: screenHeight * 0.02),
+
+                      // Forgot password
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ForgotPasswordPage(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Forgot Password?",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
+
+                      SizedBox(height: screenHeight * 0.08),
+
+                      // Login button
+                      MyButton(text: "Login", onTap: login),
+
+                      SizedBox(height: screenHeight * 0.03),
+
+                      // Register
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Not a member?",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: screenWidth * 0.04,
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          GestureDetector(
+                            onTap: widget.onTap,
+                            child: Text(
+                              "Register now",
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.inversePrimary,
+                                fontWeight: FontWeight.w700,
+                                fontSize: screenWidth * 0.045,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );
