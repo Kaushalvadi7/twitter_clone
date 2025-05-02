@@ -69,6 +69,7 @@ flutter pub get
     flutter run
     ```
 
+    
     Choose your desired target device or emulator.
 
 ## 🚀 Future Enhancements  
